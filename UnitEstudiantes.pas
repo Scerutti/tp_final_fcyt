@@ -32,15 +32,13 @@ end;
 function BuscarEstudiante(var archE: FileEstudiantes; legajo: string; var est: TEstudiante): LongInt;
 var
   posicion: LongInt;
-  clave: string[10];
 begin
-  clave := legajo;
   posicion := -1;
   Seek(archE, 0);
   while (not Eof(archE)) and (posicion = -1) do
   begin
     Read(archE, est);
-    if est.activo and (est.legajo = clave) then
+    if est.activo and (est.legajo = legajo) then
       posicion := FilePos(archE) - 1;
   end;
   BuscarEstudiante := posicion;
@@ -50,15 +48,13 @@ function BuscarEstudiantePorDni(var archE: FileEstudiantes; dni: string): LongIn
 var
   est: TEstudiante;
   posicion: LongInt;
-  clave: string[10];
 begin
-  clave := dni;
   posicion := -1;
   Seek(archE, 0);
   while (not Eof(archE)) and (posicion = -1) do
   begin
     Read(archE, est);
-    if est.activo and (est.dni = clave) then
+    if est.activo and (est.dni = dni) then
       posicion := FilePos(archE) - 1;
   end;
   BuscarEstudiantePorDni := posicion;
@@ -129,7 +125,7 @@ end;
 procedure BajaEstudiante(var archE: FileEstudiantes);
 var
   est: TEstudiante;
-  legajo: string;
+  legajo: string[10];
   posicion: LongInt;
 begin
   write('Legajo del estudiante a dar de baja: ');
@@ -149,7 +145,7 @@ end;
 procedure ModificarEstudiante(var archE: FileEstudiantes);
 var
   est: TEstudiante;
-  legajo, dni: string;
+  legajo, dni: string[10];
   posicion, posicionDni: LongInt;
 begin
   write('Legajo del estudiante a modificar: ');
