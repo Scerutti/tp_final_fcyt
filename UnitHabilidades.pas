@@ -31,13 +31,15 @@ end;
 function BuscarHabilidad(var archH: FileHabilidades; codigo: string; var hab: THabilidad): LongInt;
 var
   posicion: LongInt;
+  clave: string[10];
 begin
+  clave := codigo;
   posicion := -1;
   Seek(archH, 0);
   while (not Eof(archH)) and (posicion = -1) do
   begin
     Read(archH, hab);
-    if hab.activa and (hab.codigoHabilidad = codigo) then
+    if hab.activa and (hab.codigoHabilidad = clave) then
       posicion := FilePos(archH) - 1;
   end;
   BuscarHabilidad := posicion;
