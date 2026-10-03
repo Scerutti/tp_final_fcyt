@@ -45,12 +45,12 @@ Cada uno trabaja con sus propios `.dat`, así que no hace falta coordinarse para
 
 Archivos: `UnitEstudiantes.pas`, `UnitHabilidades.pas`, `UnitPresentacion.pas`, `main.pas`
 
-- [ ] Probar el alta de estudiantes con legajo repetido y con DNI repetido. Las dos tienen que rechazarse.
-- [ ] Probar la modificación de un estudiante poniéndole el DNI de otro. Tiene que rechazarse.
-- [ ] Probar la baja de un estudiante y verificar que no aparece más en el listado.
-- [ ] Probar el alta de habilidades con código repetido. Tiene que rechazarse.
-- [ ] Probar la modificación y la baja de habilidades.
-- [ ] Probar los menús: todas las opciones, opción inválida, volver y salir.
+- [x] Probar el alta de estudiantes con legajo repetido y con DNI repetido. Las dos tienen que rechazarse.
+- [x] Probar la modificación de un estudiante poniéndole el DNI de otro. Tiene que rechazarse.
+- [x] Probar la baja de un estudiante y verificar que no aparece más en el listado.
+- [x] Probar el alta de habilidades con código repetido. Tiene que rechazarse.
+- [x] Probar la modificación y la baja de habilidades.
+- [x] Probar los menús: todas las opciones, opción inválida, volver y salir.
 - [ ] Verificar que la pantalla se ve bien en la consola (bordes alineados, colores, pie).
 - [ ] Estudiar a fondo estas units para la defensa: búsqueda secuencial, `Seek`, `FilePos`, baja lógica con `activo`.
 
