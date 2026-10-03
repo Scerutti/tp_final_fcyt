@@ -83,7 +83,7 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
   - La Consulta 2 ordena por promedio de mayor a menor, y ante empate por nombre y apellido alfabético.
   - En la modificación no se puede cambiar el legajo ni el código de habilidad, porque son las claves.
   - Si se escribe una letra donde va un número (año, promedio, porcentaje, nivel), el programa se corta con error.
-- [ ] **Decidir si se suben los `.dat` a git** o se agregan al `.gitignore`.
+- [x] **Decidir si se suben los `.dat` a git** o se agregan al `.gitignore`.
 - [ ] **Corregir los errores** que haya encontrado cada uno.
 - [ ] **Prueba completa** en una sola PC, con el juego de datos de prueba, recorriendo todos los puntos del enunciado.
 - [ ] **Preparar la defensa:** cada uno le explica su bloque al otro. La defensa es teórica y práctica, así que los dos tienen que poder explicar todo el código.
