@@ -51,8 +51,8 @@ Archivos: `UnitEstudiantes.pas`, `UnitHabilidades.pas`, `UnitPresentacion.pas`, 
 - [x] Probar el alta de habilidades con código repetido. Tiene que rechazarse.
 - [x] Probar la modificación y la baja de habilidades.
 - [x] Probar los menús: todas las opciones, opción inválida, volver y salir.
-- [ ] Verificar que la pantalla se ve bien en la consola (bordes alineados, colores, pie).
-- [ ] Estudiar a fondo estas units para la defensa: búsqueda secuencial, `Seek`, `FilePos`, baja lógica con `activo`.
+- [x] Verificar que la pantalla se ve bien en la consola (bordes alineados, colores, pie).
+- [x] Estudiar a fondo estas units para la defensa: búsqueda secuencial, `Seek`, `FilePos`, baja lógica con `activo`.
 
 ### Bloque B: Competencias y Consultas
 
