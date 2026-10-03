@@ -32,13 +32,15 @@ end;
 function BuscarEstudiante(var archE: FileEstudiantes; legajo: string; var est: TEstudiante): LongInt;
 var
   posicion: LongInt;
+  clave: string[10];
 begin
+  clave := legajo;
   posicion := -1;
   Seek(archE, 0);
   while (not Eof(archE)) and (posicion = -1) do
   begin
     Read(archE, est);
-    if est.activo and (est.legajo = legajo) then
+    if est.activo and (est.legajo = clave) then
       posicion := FilePos(archE) - 1;
   end;
   BuscarEstudiante := posicion;
@@ -48,13 +50,15 @@ function BuscarEstudiantePorDni(var archE: FileEstudiantes; dni: string): LongIn
 var
   est: TEstudiante;
   posicion: LongInt;
+  clave: string[10];
 begin
+  clave := dni;
   posicion := -1;
   Seek(archE, 0);
   while (not Eof(archE)) and (posicion = -1) do
   begin
     Read(archE, est);
-    if est.activo and (est.dni = dni) then
+    if est.activo and (est.dni = clave) then
       posicion := FilePos(archE) - 1;
   end;
   BuscarEstudiantePorDni := posicion;
