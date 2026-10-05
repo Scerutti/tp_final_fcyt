@@ -6,7 +6,7 @@ uses
   SysUtils, TiposGlobales;
 
 const
-  RUTA_HABILIDADES = 'C:\Users\Seba Cerutti\Desktop\tp_final\docs\habilidades.dat';
+  RUTA_HABILIDADES = 'docs\habilidades.dat';
 
 procedure AbrirHabilidades(var archH: FileHabilidades);
 function BuscarHabilidad(var archH: FileHabilidades; codigo: string; var hab: THabilidad): LongInt;

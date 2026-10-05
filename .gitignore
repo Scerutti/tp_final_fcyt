@@ -3,3 +3,5 @@
 *.ppu
 AGENTS.md
 docs/*.dat
+.vscode/
+

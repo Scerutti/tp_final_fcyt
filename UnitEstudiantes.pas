@@ -6,7 +6,7 @@ uses
   SysUtils, TiposGlobales;
 
 const
-  RUTA_ESTUDIANTES = 'C:\Users\Seba Cerutti\Desktop\tp_final\docs\estudiantes.dat';
+  RUTA_ESTUDIANTES = 'docs\estudiantes.dat';
 
 procedure AbrirEstudiantes(var archE: FileEstudiantes);
 function BuscarEstudiante(var archE: FileEstudiantes; legajo: string; var est: TEstudiante): LongInt;

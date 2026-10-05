@@ -23,7 +23,7 @@ Lo que falta es probar todo, cerrar algunas decisiones y preparar la defensa.
 
 ### 1. Validar la ruta de los archivos
 
-Para que el programa funcione, validá que la ruta de la carpeta `docs` sea la correcta en tu PC. Está definida en estas tres constantes:
+Los archivos se guardan en la carpeta `docs` mediante rutas relativas. Ejecutá el programa desde la carpeta del proyecto. Las tareas de VS Code ya usan esa carpeta. Las rutas están definidas en estas tres constantes:
 
 - `RUTA_ESTUDIANTES` en `UnitEstudiantes.pas`
 - `RUTA_HABILIDADES` en `UnitHabilidades.pas`
@@ -75,7 +75,7 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
 
 ## Puntos a hacer juntos
 
-- [ ] **Ruta de los archivos:** decidir si se usa una ruta relativa (por ejemplo `docs\estudiantes.dat`), que funciona en cualquier PC si el programa se ejecuta desde la carpeta del proyecto.
+- [x] **Ruta de los archivos:** se usan rutas relativas (`docs\estudiantes.dat`, `docs\habilidades.dat` y `docs\competencias.dat`). Ejecutar desde la carpeta del proyecto.
 - [ ] **Confirmar o cambiar estas decisiones**, que el enunciado no aclara:
   - La baja es lógica: el registro queda en el archivo con `activo := False`.
   - Dar de baja un estudiante o una habilidad no da de baja sus competencias.

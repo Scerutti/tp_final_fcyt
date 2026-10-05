@@ -6,7 +6,7 @@ uses
   SysUtils, TiposGlobales, UnitEstudiantes, UnitHabilidades;
 
 const
-  RUTA_COMPETENCIAS = 'C:\Users\Seba Cerutti\Desktop\tp_final\docs\competencias.dat';
+  RUTA_COMPETENCIAS = 'docs\competencias.dat';
 
 procedure AbrirCompetencias(var archC: FileCompetencias);
 function BuscarCompetencia(var archC: FileCompetencias; legajo, codigo: string; var comp: TCompetencia): LongInt;
