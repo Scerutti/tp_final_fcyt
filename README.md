@@ -58,8 +58,6 @@ Archivos: `UnitEstudiantes.pas`, `UnitHabilidades.pas`, `UnitPresentacion.pas`, 
 
 Archivo: `UnitCompetencias.pas`
 
-Se corrigió la lectura del nivel para volver a pedirlo también ante texto, entradas vacías o números demasiado grandes. Las pruebas reproducibles, el juego de datos y la guía de defensa están en [docs/BloqueB.md](docs/BloqueB.md). La unit compila y las 16 pruebas automáticas pasaron, incluyendo el orden descendente de la Consulta 1.
-
 Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de Estudiantes y Habilidades para cargar algunos.
 
 - [x] Probar el alta de competencias con legajo inexistente, código inexistente y par legajo-habilidad repetido. Las tres tienen que rechazarse.
@@ -91,6 +89,9 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
 - [ ] **Preparar la defensa:** cada uno le explica su bloque al otro. La defensa es teórica y práctica, así que los dos tienen que poder explicar todo el código.
 - [ ] **Revisión previa a la defensa:** enviar el trabajo al corrector del turno que corresponda (los mails están en el enunciado).
 
-## Datos de ejemplo y prueba paso a paso
 
-Ver [docs/PruebaConsultaDescendente.md](docs/PruebaConsultaDescendente.md) para cargar estudiantes, habilidades y competencias, y verificar las consultas.
+## Datos de prueba
+
+Ejecutar `powershell -File scripts/PopularDatos.ps1` para cargar 5 estudiantes, 5 habilidades y 10 competencias. Si ya existen datos, usar `-Reemplazar` para guardarlos en un respaldo y cargar los ejemplos.
+
+Las pruebas se ejecutan con `powershell -File tests/PruebaBloqueB.ps1`.
