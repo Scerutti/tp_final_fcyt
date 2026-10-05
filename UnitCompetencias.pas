@@ -6,7 +6,7 @@ uses
   SysUtils, TiposGlobales, UnitEstudiantes, UnitHabilidades;
 
 const
-  RUTA_COMPETENCIAS = 'C:\Users\Seba Cerutti\Desktop\tp_final\docs\competencias.dat';
+  RUTA_COMPETENCIAS = 'docs\competencias.dat';
 
 procedure AbrirCompetencias(var archC: FileCompetencias);
 function BuscarCompetencia(var archC: FileCompetencias; legajo, codigo: string; var comp: TCompetencia): LongInt;
@@ -145,7 +145,7 @@ end;
 procedure BajaCompetencia(var archC: FileCompetencias);
 var
   comp: TCompetencia;
-  legajo, codigo: string;
+  legajo, codigo: string[10];
   posicion: LongInt;
 begin
   write('Legajo del estudiante: ');
@@ -167,7 +167,7 @@ end;
 procedure ModificarCompetencia(var archC: FileCompetencias);
 var
   comp: TCompetencia;
-  legajo, codigo: string;
+  legajo, codigo: string[10];
   posicion: LongInt;
 begin
   write('Legajo del estudiante: ');
@@ -228,7 +228,7 @@ var
   est: TEstudiante;
   comp: TCompetencia;
   hab: THabilidad;
-  legajo: string;
+  legajo: string[10];
   cantidad, i: Integer;
 begin
   write('Legajo del estudiante: ');
@@ -288,7 +288,7 @@ var
   est: TEstudiante;
   comp: TCompetencia;
   hab: THabilidad;
-  codigo: string;
+  codigo: string[10];
   nivelMinimo: Byte;
   cantidad, i: Integer;
 begin

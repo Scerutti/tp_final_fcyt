@@ -23,7 +23,7 @@ Lo que falta es probar todo, cerrar algunas decisiones y preparar la defensa.
 
 ### 1. Validar la ruta de los archivos
 
-Para que el programa funcione, validá que la ruta de la carpeta `docs` sea la correcta en tu PC. Está definida en estas tres constantes:
+Los archivos se guardan en la carpeta `docs` mediante rutas relativas. Ejecutá el programa desde la carpeta del proyecto. Las tareas de VS Code ya usan esa carpeta. Las rutas están definidas en estas tres constantes:
 
 - `RUTA_ESTUDIANTES` en `UnitEstudiantes.pas`
 - `RUTA_HABILIDADES` en `UnitHabilidades.pas`
@@ -45,14 +45,14 @@ Cada uno trabaja con sus propios `.dat`, así que no hace falta coordinarse para
 
 Archivos: `UnitEstudiantes.pas`, `UnitHabilidades.pas`, `UnitPresentacion.pas`, `main.pas`
 
-- [ ] Probar el alta de estudiantes con legajo repetido y con DNI repetido. Las dos tienen que rechazarse.
-- [ ] Probar la modificación de un estudiante poniéndole el DNI de otro. Tiene que rechazarse.
-- [ ] Probar la baja de un estudiante y verificar que no aparece más en el listado.
-- [ ] Probar el alta de habilidades con código repetido. Tiene que rechazarse.
-- [ ] Probar la modificación y la baja de habilidades.
-- [ ] Probar los menús: todas las opciones, opción inválida, volver y salir.
-- [ ] Verificar que la pantalla se ve bien en la consola (bordes alineados, colores, pie).
-- [ ] Estudiar a fondo estas units para la defensa: búsqueda secuencial, `Seek`, `FilePos`, baja lógica con `activo`.
+- [x] Probar el alta de estudiantes con legajo repetido y con DNI repetido. Las dos tienen que rechazarse.
+- [x] Probar la modificación de un estudiante poniéndole el DNI de otro. Tiene que rechazarse.
+- [x] Probar la baja de un estudiante y verificar que no aparece más en el listado.
+- [x] Probar el alta de habilidades con código repetido. Tiene que rechazarse.
+- [x] Probar la modificación y la baja de habilidades.
+- [x] Probar los menús: todas las opciones, opción inválida, volver y salir.
+- [x] Verificar que la pantalla se ve bien en la consola (bordes alineados, colores, pie).
+- [x] Estudiar a fondo estas units para la defensa: búsqueda secuencial, `Seek`, `FilePos`, baja lógica con `activo`.
 
 ### Bloque B: Competencias y Consultas
 
@@ -75,7 +75,7 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
 
 ## Puntos a hacer juntos
 
-- [ ] **Ruta de los archivos:** decidir si se usa una ruta relativa (por ejemplo `docs\estudiantes.dat`), que funciona en cualquier PC si el programa se ejecuta desde la carpeta del proyecto.
+- [x] **Ruta de los archivos:** se usan rutas relativas (`docs\estudiantes.dat`, `docs\habilidades.dat` y `docs\competencias.dat`). Ejecutar desde la carpeta del proyecto.
 - [ ] **Confirmar o cambiar estas decisiones**, que el enunciado no aclara:
   - La baja es lógica: el registro queda en el archivo con `activo := False`.
   - Dar de baja un estudiante o una habilidad no da de baja sus competencias.
@@ -83,7 +83,7 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
   - La Consulta 2 ordena por promedio de mayor a menor, y ante empate por nombre y apellido alfabético.
   - En la modificación no se puede cambiar el legajo ni el código de habilidad, porque son las claves.
   - Si se escribe una letra donde va un número (año, promedio, porcentaje, nivel), el programa se corta con error.
-- [ ] **Decidir si se suben los `.dat` a git** o se agregan al `.gitignore`.
+- [x] **Decidir si se suben los `.dat` a git** o se agregan al `.gitignore`.
 - [ ] **Corregir los errores** que haya encontrado cada uno.
 - [ ] **Prueba completa** en una sola PC, con el juego de datos de prueba, recorriendo todos los puntos del enunciado.
 - [ ] **Preparar la defensa:** cada uno le explica su bloque al otro. La defensa es teórica y práctica, así que los dos tienen que poder explicar todo el código.

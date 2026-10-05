@@ -6,7 +6,7 @@ uses
   SysUtils, TiposGlobales;
 
 const
-  RUTA_HABILIDADES = 'C:\Users\Seba Cerutti\Desktop\tp_final\docs\habilidades.dat';
+  RUTA_HABILIDADES = 'docs\habilidades.dat';
 
 procedure AbrirHabilidades(var archH: FileHabilidades);
 function BuscarHabilidad(var archH: FileHabilidades; codigo: string; var hab: THabilidad): LongInt;
@@ -91,7 +91,7 @@ end;
 procedure BajaHabilidad(var archH: FileHabilidades);
 var
   hab: THabilidad;
-  codigo: string;
+  codigo: string[10];
   posicion: LongInt;
 begin
   write('Codigo de la habilidad a dar de baja: ');
@@ -111,7 +111,7 @@ end;
 procedure ModificarHabilidad(var archH: FileHabilidades);
 var
   hab: THabilidad;
-  codigo: string;
+  codigo: string[10];
   posicion: LongInt;
 begin
   write('Codigo de la habilidad a modificar: ');

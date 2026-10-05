@@ -6,7 +6,7 @@ uses
   SysUtils, TiposGlobales;
 
 const
-  RUTA_ESTUDIANTES = 'C:\Users\Seba Cerutti\Desktop\tp_final\docs\estudiantes.dat';
+  RUTA_ESTUDIANTES = 'docs\estudiantes.dat';
 
 procedure AbrirEstudiantes(var archE: FileEstudiantes);
 function BuscarEstudiante(var archE: FileEstudiantes; legajo: string; var est: TEstudiante): LongInt;
@@ -125,7 +125,7 @@ end;
 procedure BajaEstudiante(var archE: FileEstudiantes);
 var
   est: TEstudiante;
-  legajo: string;
+  legajo: string[10];
   posicion: LongInt;
 begin
   write('Legajo del estudiante a dar de baja: ');
@@ -145,7 +145,7 @@ end;
 procedure ModificarEstudiante(var archE: FileEstudiantes);
 var
   est: TEstudiante;
-  legajo, dni: string;
+  legajo, dni: string[10];
   posicion, posicionDni: LongInt;
 begin
   write('Legajo del estudiante a modificar: ');
