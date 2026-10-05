@@ -83,14 +83,18 @@ end;
 
 function LeerNivel(mensaje: string): Byte;
 var
-  nivel: Integer;
+  entrada: string;
+  nivel, error: LongInt;
+  valido: Boolean;
 begin
   repeat
     write(mensaje, ' (1=Inicial, 2=Basico, 3=Intermedio, 4=Avanzado, 5=Experto): ');
-    readln(nivel);
-    if (nivel < 1) or (nivel > 5) then
+    readln(entrada);
+    Val(Trim(entrada), nivel, error);
+    valido := (error = 0) and (nivel >= 1) and (nivel <= 5);
+    if not valido then
       writeln('El nivel debe estar entre 1 y 5.');
-  until (nivel >= 1) and (nivel <= 5);
+  until valido;
   LeerNivel := nivel;
 end;
 

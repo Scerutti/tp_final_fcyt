@@ -58,6 +58,8 @@ Archivos: `UnitEstudiantes.pas`, `UnitHabilidades.pas`, `UnitPresentacion.pas`, 
 
 Archivo: `UnitCompetencias.pas`
 
+Se corrigió la lectura del nivel para volver a pedirlo también ante texto, entradas vacías o números demasiado grandes. Las pruebas reproducibles, el juego de datos y la guía de defensa están en [docs/BloqueB.md](docs/BloqueB.md). La unit y las pruebas compilan; los casos siguen pendientes porque Windows bloqueó la ejecución del programa de pruebas.
+
 Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de Estudiantes y Habilidades para cargar algunos.
 
 - [ ] Probar el alta de competencias con legajo inexistente, código inexistente y par legajo-habilidad repetido. Las tres tienen que rechazarse.
@@ -82,7 +84,7 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
   - La Consulta 1 ordena por nombre de habilidad y después por nivel, de menor a mayor.
   - La Consulta 2 ordena por promedio de mayor a menor, y ante empate por nombre y apellido alfabético.
   - En la modificación no se puede cambiar el legajo ni el código de habilidad, porque son las claves.
-  - Si se escribe una letra donde va un número (año, promedio, porcentaje, nivel), el programa se corta con error.
+  - Si se escribe una letra donde va un número (año, promedio, porcentaje), el programa se corta con error. El nivel de dominio ya valida la entrada y vuelve a pedirla.
 - [x] **Decidir si se suben los `.dat` a git** o se agregan al `.gitignore`.
 - [ ] **Corregir los errores** que haya encontrado cada uno.
 - [ ] **Prueba completa** en una sola PC, con el juego de datos de prueba, recorriendo todos los puntos del enunciado.
