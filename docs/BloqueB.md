@@ -10,7 +10,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tests/PruebaBloqueB.ps1
 
 El script ejecuta 16 casos con archivos propios en una carpeta temporal; no modifica `docs/*.dat`. Verifica altas rechazadas, niveles inválidos, modificación, baja lógica, consultas ordenadas, empate de promedios, resultados vacíos, claves inexistentes y referencias inactivas.
 
-La unit y el programa de pruebas compilaron con Free Pascal 3.2.2 y controles de rango, desbordamiento y entrada/salida. Windows bloqueó la ejecución mediante Control de aplicaciones. Los casos siguen pendientes de ejecución; compilar no demuestra que pasen. `ExecutionPolicy Bypass` solo afecta al script PowerShell.
+La unit y el programa de pruebas compilaron con Free Pascal 3.2.2 y controles de rango, desbordamiento y entrada/salida. Las 16 pruebas pasaron el 5 de octubre de 2026, incluyendo el orden descendente de Consulta 1. Si Windows bloquea el ejecutable mediante Control de aplicaciones, esa ejecución no verifica los casos; `ExecutionPolicy Bypass` solo afecta al script PowerShell.
 
 ## Datos de prueba
 
@@ -45,7 +45,7 @@ Los estudiantes cursan LSI, ingresaron en 2026 y tienen 20% de avance. Todos los
 | E4 | H1 | 2 |
 | E4 | H5 | 3 |
 
-Consulta 1 para E1 debe mostrar H3, H2, H1 y H4: nombre de habilidad ascendente y nivel ascendente cuando el nombre coincide. Consulta 2 para H1 con mínimo 2 debe mostrar Luis Gomez, Ana Torres, Zoe Perez y Bruno Diaz: promedio descendente y nombre completo ascendente en los empates. E5 no tiene competencias; H5 con mínimo 5 no devuelve candidatos.
+Consulta 1 para E1 debe mostrar H4, H1, H2 y H3: nombre de habilidad descendente y nivel descendente cuando el nombre coincide. Consulta 2 para H1 con mínimo 2 debe mostrar Luis Gomez, Ana Torres, Zoe Perez y Bruno Diaz: promedio descendente y nombre completo ascendente en los empates. E5 no tiene competencias; H5 con mínimo 5 no devuelve candidatos.
 
 ## Error corregido
 
@@ -58,5 +58,5 @@ Ingresar texto como nivel en alta, modificación o Consulta 2 terminaba el progr
 - **Modificación y baja:** buscar la posición, cambiar el nivel o `activa`, regresar con `Seek` y sobrescribir. Las claves se conservan; una baja lógica no reduce el tamaño del archivo.
 - **Vectores:** cargar las relaciones activas que cumplen el filtro. Consulta 1 filtra por legajo; Consulta 2 por habilidad y nivel mínimo. Se omiten estudiantes o habilidades inactivos.
 - **Burbuja:** comparar vecinos e intercambiar el registro completo. Cada pasada reduce el tramo pendiente mediante `n - i`; el costo de ordenamiento es cuadrático.
-- **Criterios:** Consulta 1 ordena nombre y nivel ascendentes; Consulta 2 promedio descendente y `nombreApellido` ascendente. La comparación de cadenas es sensible a mayúsculas y no separa nombre de apellido.
+- **Criterios:** Consulta 1 ordena nombre y nivel descendentes; Consulta 2 promedio descendente y `nombreApellido` ascendente. La comparación de cadenas es sensible a mayúsculas y no separa nombre de apellido.
 - **Límite actual:** cada vector admite 1000 resultados. Dar de baja un estudiante o habilidad no modifica sus competencias, aunque las consultas omiten esas relaciones inactivas.
