@@ -47,6 +47,12 @@ begin
     Comprobar((FileSize(e) = 4) and (BuscarEstudiante(e, '1004', est) = 3));
     Comprobar((est.nombreApellido = 'Diego Sosa') and (est.anioIngreso = 2024) and est.activo);
   end
+  else if accion = 'est-alta-nombre-vacio' then
+  begin
+    AltaEstudiante(e);
+    Comprobar((FileSize(e) = 4) and (BuscarEstudiante(e, '1004', est) = 3));
+    Comprobar(est.nombreApellido = '');
+  end
   else if accion = 'est-alta-legajo-dup' then
   begin
     AltaEstudiante(e); Comprobar(FileSize(e) = 3);

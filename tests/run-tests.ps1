@@ -10,6 +10,7 @@ $script:pasaron = 0
 $script:fallaron = 0
 $script:fallos = @()
 $script:suiteActual = ''
+$limiteMs = 15000
 
 function Suite($nombre) {
     $script:suiteActual = $nombre
@@ -46,29 +47,60 @@ function Probar {
     $caso = Join-Path $temporal ('caso-' + $script:total)
     New-Item -ItemType Directory $caso | Out-Null
 
-    Push-Location $caso
+    $colgado = $false
+    $psi = New-Object System.Diagnostics.ProcessStartInfo
+    $psi.FileName = $exe
+    $psi.Arguments = $accion
+    $psi.WorkingDirectory = $caso
+    $psi.UseShellExecute = $false
+    $psi.RedirectStandardInput = $true
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError = $true
     try {
-        $salida = ($entrada | & $exe $accion 2>&1 | Out-String)
-        $codigo = $LASTEXITCODE
+        $proc = [System.Diagnostics.Process]::Start($psi)
+        $lectorSalida = $proc.StandardOutput.ReadToEndAsync()
+        $lectorError = $proc.StandardError.ReadToEndAsync()
+        $proc.StandardInput.Write($entrada + "`n")
+        $proc.StandardInput.Close()
+        if ($proc.WaitForExit($limiteMs)) {
+            $codigo = $proc.ExitCode
+        } else {
+            $colgado = $true
+            $codigo = -1
+            $proc.Kill($true)
+            $proc.WaitForExit(5000) | Out-Null
+        }
+        $salida = $lectorSalida.Result + $lectorError.Result
+        $proc.Dispose()
     } catch {
         $salida = $_.Exception.Message
         $codigo = -1
-    } finally {
-        Pop-Location
     }
 
     $motivos = @()
+    if ($colgado) {
+        $motivos += "La prueba se colgo mas de $([int]($limiteMs / 1000)) segundos: el programa sigue pidiendo datos y la entrada se agoto"
+    }
     $corte = ''
     if ($salida -match 'Runtime error (\d+)') { $corte = "runtime error $($Matches[1])" }
     elseif ($salida -match '(E[A-Za-z]+Error): *([^\r\n]*)') { $corte = ($Matches[1] + ': ' + $Matches[2]).Trim() }
     elseif ($codigo -eq 1) { $corte = 'una comprobacion dio falso' }
     elseif ($codigo -ne 0) { $corte = "codigo de salida $codigo" }
 
-    if ($corteEsperado) {
+    $explicacion = ''
+    if ($corte -match 'Invalid input') { $explicacion = 'se esperaba un numero y llego texto, vacio o coma decimal' }
+    elseif ($corte -match 'Invalid filename') { $explicacion = 'no existe la carpeta donde va el archivo .dat' }
+    elseif ($corte -match 'File not (open|found)') { $explicacion = 'el archivo no estaba abierto' }
+    elseif ($corte -eq 'una comprobacion dio falso') { $explicacion = 'el archivo no quedo como esperaba la prueba' }
+    if ($explicacion -ne '') { $explicacion = " ($explicacion)" }
+
+    if ($colgado) { }
+    elseif ($corteEsperado) {
         if ($corte -eq '') { $motivos += 'Se esperaba que la ejecucion se cortara y no se corto' }
     }
     elseif ($corte -ne '') {
-        $motivos += "La ejecucion se corto: $corte"
+        $motivos += "La ejecucion se corto: $corte$explicacion"
+        if ($entrada -ne '') { $motivos += "Entrada tipeada: " + ($entrada -replace "`n", ' / ') }
     }
 
     foreach ($t in $esperados) {
@@ -131,12 +163,15 @@ try {
 
         Suite 'Apertura de archivos'
         Probar 'crea el archivo y lo reabre' 'PruebaBloqueA' 'est-abrir' '' @('VERIFICADO')
-        Probar 'sin la carpeta docs' 'PruebaBloqueA' 'est-abrir-sin-docs' '' @()
+        Probar 'crea la carpeta docs si falta' 'PruebaBloqueA' 'est-abrir-sin-docs' '' @('VERIFICADO')
 
-        Suite 'Entradas no numericas'
-        Probar 'anio con letras' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`nabc" @()
-        Probar 'promedio con coma' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n8,5" @()
-        Probar 'promedio vacio' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n`n30" @()
+        Suite 'Entradas invalidas'
+        Probar 'anio con letras vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`nabc`n2024`n6.5`n30" @('Ingrese un numero entero entre 1900 y 2100.', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'anio fuera de rango vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n1800`n2024`n6.5`n30" @('Ingrese un numero entero entre 1900 y 2100.', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'promedio con coma vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n8,5`n8.5`n30" @('usando punto decimal', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'promedio vacio vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n`n7`n30" @('usando punto decimal', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'porcentaje fuera de rango vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n150`n30" @('Ingrese un numero entre 0.00 y 100.00', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'nombre vacio se acepta' 'PruebaBloqueA' 'est-alta-nombre-vacio' "1004`n33444555`n`nSistemas`n2024`n6.5`n30" @('Estudiante registrado.', 'VERIFICADO')
     }
 
     if ($compilaB) {
@@ -166,6 +201,11 @@ try {
 
     Write-Host ''
     Write-Host ('-' * 60)
+    if (-not ($compilaA -and $compilaB)) {
+        Write-Host 'No compilaron todos los programas de prueba. La suite esta incompleta.' -ForegroundColor Red
+        Write-Host "Pruebas: $($script:pasaron) pasaron, $($script:fallaron) fallaron, $($script:total) en total"
+        exit 1
+    }
     if ($script:fallos.Count -gt 0) {
         Write-Host 'Pruebas que fallaron:' -ForegroundColor Red
         foreach ($f in $script:fallos) {
