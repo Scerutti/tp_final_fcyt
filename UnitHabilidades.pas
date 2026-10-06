@@ -141,6 +141,8 @@ begin
     Read(archH, hab);
     if hab.activa then
     begin
+      if Assigned(Paginador) then
+        Paginador(4);
       MostrarHabilidad(hab);
       cantidad := cantidad + 1;
     end;

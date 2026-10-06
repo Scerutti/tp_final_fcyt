@@ -203,6 +203,8 @@ begin
     Read(archC, comp);
     if comp.activa then
     begin
+      if Assigned(Paginador) then
+        Paginador(4);
       MostrarCompetencia(comp);
       cantidad := cantidad + 1;
     end;

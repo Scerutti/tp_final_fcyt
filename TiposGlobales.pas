@@ -31,6 +31,13 @@ type
   end;
   FileCompetencias = file of TCompetencia;
 
+  { Lo asigna el programa principal para cortar los listados por pantalla;
+    las pruebas lo dejan en nil y listan sin pausas. }
+  TPaginador = procedure(lineasSiguientes: Integer);
+
+var
+  Paginador: TPaginador = nil;
+
 implementation
 
 end.

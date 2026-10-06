@@ -184,6 +184,8 @@ begin
     Read(archE, est);
     if est.activo then
     begin
+      if Assigned(Paginador) then
+        Paginador(8);
       MostrarEstudiante(est);
       cantidad := cantidad + 1;
     end;

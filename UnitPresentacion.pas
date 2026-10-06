@@ -7,6 +7,7 @@ procedure MostrarMenu(titulo: string; opciones: array of string; opcionSalida: s
 procedure MostrarTituloSeccion(seccion, titulo: string);
 procedure MostrarAviso(mensaje: string);
 procedure Pausa;
+procedure PaginarListado(lineasSiguientes: Integer);
 procedure MostrarDespedida;
 
 implementation
@@ -33,6 +34,13 @@ const
 
   COLORES_LOGO: array[1..5] of Byte = (LightGray, Cyan, Cyan, Blue, Blue);
 
+  { Margen a cada lado del recuadro: el ultimo caracter no puede caer en el
+    borde derecho de la ventana o Crt salta de linea solo. }
+  ANCHO_VENTANA = ANCHO + 2 + 2 * MARGEN;
+
+var
+  anchoPantalla, altoPantalla, filaInicio: Integer;
+
 function Repetir(c: Char; n: Integer): string;
 var
   s: string;
@@ -42,6 +50,29 @@ begin
   for i := 1 to n do
     s := s + c;
   Repetir := s;
+end;
+
+{ Limpia toda la consola y deja una ventana Crt centrada en horizontal. Si se
+  conoce el alto del contenido tambien se centra en vertical; con alto 0 la
+  ventana arranca arriba para que los listados usen toda la altura. }
+procedure PrepararPantalla(alto: Integer);
+var
+  izquierda, derecha: Integer;
+begin
+  Window(1, 1, anchoPantalla, altoPantalla);
+  TextBackground(Black);
+  ClrScr;
+  izquierda := (anchoPantalla - ANCHO_VENTANA) div 2 + 1;
+  if izquierda < 1 then
+    izquierda := 1;
+  derecha := izquierda + ANCHO_VENTANA - 1;
+  if derecha > anchoPantalla then
+    derecha := anchoPantalla;
+  if (alto > 0) and (alto < altoPantalla) then
+    filaInicio := (altoPantalla - alto) div 2 + 1
+  else
+    filaInicio := 1;
+  Window(izquierda, filaInicio, derecha, altoPantalla);
 end;
 
 procedure IrMargen;
@@ -199,8 +230,7 @@ var
   i, izquierda, columna, fila, filaFinal: Integer;
 begin
   CursorOff;
-  TextBackground(Black);
-  ClrScr;
+  PrepararPantalla(19);
   Borde('=', TEXTO_SUPERIOR);
   writeln;
   LineaVacia;
@@ -247,8 +277,7 @@ procedure MostrarMenu(titulo: string; opciones: array of string; opcionSalida: s
 var
   i, columna, fila: Integer;
 begin
-  TextBackground(Black);
-  ClrScr;
+  PrepararPantalla(20 + Length(opciones));
   Borde('=', TEXTO_SUPERIOR);
   writeln;
   LineaVacia;
@@ -284,8 +313,7 @@ end;
 
 procedure MostrarTituloSeccion(seccion, titulo: string);
 begin
-  TextBackground(Black);
-  ClrScr;
+  PrepararPantalla(0);
   Borde('=', 'UADERTalents');
   writeln;
   AbrirLinea;
@@ -327,10 +355,28 @@ begin
   TextColor(LightGray);
 end;
 
-procedure MostrarDespedida;
+{ Crt hace scroll dentro de la ventana visible y no llena el buffer de la
+  consola, asi que antes de que el proximo registro empuje la pantalla se pide
+  ENTER y se limpia. }
+procedure PaginarListado(lineasSiguientes: Integer);
 begin
-  TextBackground(Black);
-  ClrScr;
+  if WhereY + lineasSiguientes + 3 > WindMaxY - WindMinY + 1 then
+  begin
+    TextColor(LightGreen);
+    write('>> ');
+    TextColor(White);
+    write('Presione ENTER para ver mas...');
+    readln;
+    TextColor(LightGray);
+    ClrScr;
+  end;
+end;
+
+procedure MostrarDespedida;
+var
+  filaFinal: Integer;
+begin
+  PrepararPantalla(14);
   Borde('=', TEXTO_SUPERIOR);
   writeln;
   LineaVacia;
@@ -344,8 +390,18 @@ begin
   DibujarPie;
   Borde('=', TEXTO_INFERIOR);
   writeln;
+  { Se vuelve a la consola completa para que el prompt de la terminal quede
+    en la columna 1 al salir. }
+  filaFinal := filaInicio + WhereY - 1;
+  Window(1, 1, anchoPantalla, altoPantalla);
+  GotoXY(1, filaFinal);
   writeln;
   NormVideo;
 end;
 
+initialization
+  { Crt arranca con la ventana igual a la consola visible. }
+  anchoPantalla := WindMaxX - WindMinX + 1;
+  altoPantalla := WindMaxY - WindMinY + 1;
+  filaInicio := 1;
 end.
