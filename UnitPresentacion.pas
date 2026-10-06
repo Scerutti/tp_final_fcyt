@@ -34,8 +34,6 @@ const
 
   COLORES_LOGO: array[1..5] of Byte = (LightGray, Cyan, Cyan, Blue, Blue);
 
-  { Margen a cada lado del recuadro: el ultimo caracter no puede caer en el
-    borde derecho de la ventana o Crt salta de linea solo. }
   ANCHO_VENTANA = ANCHO + 2 + 2 * MARGEN;
 
 var
@@ -52,9 +50,6 @@ begin
   Repetir := s;
 end;
 
-{ Limpia toda la consola y deja una ventana Crt centrada en horizontal. Si se
-  conoce el alto del contenido tambien se centra en vertical; con alto 0 la
-  ventana arranca arriba para que los listados usen toda la altura. }
 procedure PrepararPantalla(alto: Integer);
 var
   izquierda, derecha: Integer;
@@ -355,9 +350,7 @@ begin
   TextColor(LightGray);
 end;
 
-{ Crt hace scroll dentro de la ventana visible y no llena el buffer de la
-  consola, asi que antes de que el proximo registro empuje la pantalla se pide
-  ENTER y se limpia. }
+
 procedure PaginarListado(lineasSiguientes: Integer);
 begin
   if WhereY + lineasSiguientes + 3 > WindMaxY - WindMinY + 1 then
@@ -390,8 +383,6 @@ begin
   DibujarPie;
   Borde('=', TEXTO_INFERIOR);
   writeln;
-  { Se vuelve a la consola completa para que el prompt de la terminal quede
-    en la columna 1 al salir. }
   filaFinal := filaInicio + WhereY - 1;
   Window(1, 1, anchoPantalla, altoPantalla);
   GotoXY(1, filaFinal);
@@ -400,7 +391,6 @@ begin
 end;
 
 initialization
-  { Crt arranca con la ventana igual a la consola visible. }
   anchoPantalla := WindMaxX - WindMinX + 1;
   altoPantalla := WindMaxY - WindMinY + 1;
   filaInicio := 1;
