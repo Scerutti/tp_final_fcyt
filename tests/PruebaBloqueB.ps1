@@ -34,9 +34,9 @@ try {
         $null = Probar 'Modificar inexistente' 'modificar-inexistente' "E99`nH1" @('No existe esa competencia.')
         $null = Probar 'Baja inexistente' 'baja-inexistente' "E99`nH1" @('No existe esa competencia.')
         $null = Probar 'Baja logica y consulta' 'baja' "E1`nH1`nE1" @('Competencia dada de baja.', 'VERIFICADO') @('Programacion (H1')
-        $salida = Probar 'Consulta 1' 'legajo' 'E1' @('Analisis (H3', 'Analisis (H2', 'Programacion (H1', 'Redes (H4')
+        $salida = Probar 'Consulta 1' 'legajo' 'E1' @('Redes (H4', 'Programacion (H1', 'Analisis (H2', 'Analisis (H3')
         $anterior = -1
-        foreach ($texto in @('Analisis (H3', 'Analisis (H2', 'Programacion (H1', 'Redes (H4')) {
+        foreach ($texto in @('Redes (H4', 'Programacion (H1', 'Analisis (H2', 'Analisis (H3')) {
             $indice = $salida.IndexOf($texto)
             if ($indice -le $anterior) { throw 'Orden incorrecto de Consulta 1.' }
             $anterior = $indice

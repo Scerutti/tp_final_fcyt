@@ -58,16 +58,14 @@ Archivos: `UnitEstudiantes.pas`, `UnitHabilidades.pas`, `UnitPresentacion.pas`, 
 
 Archivo: `UnitCompetencias.pas`
 
-Se corrigió la lectura del nivel para volver a pedirlo también ante texto, entradas vacías o números demasiado grandes. Las pruebas reproducibles, el juego de datos y la guía de defensa están en [docs/BloqueB.md](docs/BloqueB.md). La unit y las pruebas compilan; los casos siguen pendientes porque Windows bloqueó la ejecución del programa de pruebas.
-
 Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de Estudiantes y Habilidades para cargar algunos.
 
-- [ ] Probar el alta de competencias con legajo inexistente, código inexistente y par legajo-habilidad repetido. Las tres tienen que rechazarse.
-- [ ] Probar el nivel de dominio fuera de rango (0, 6). Tiene que volver a pedirlo.
-- [ ] Probar la modificación y la baja de competencias.
-- [ ] Probar la Consulta 1 con un estudiante que tenga varias habilidades. Verificar el orden por habilidad y nivel.
-- [ ] Probar la Consulta 2 con varios estudiantes, incluyendo dos con el mismo promedio. Verificar que el empate se ordena por nombre y apellido.
-- [ ] Probar las dos consultas con legajos y códigos que no existen, y con resultados vacíos.
+- [x] Probar el alta de competencias con legajo inexistente, código inexistente y par legajo-habilidad repetido. Las tres tienen que rechazarse.
+- [x] Probar el nivel de dominio fuera de rango (0, 6). Tiene que volver a pedirlo.
+- [x] Probar la modificación y la baja de competencias.
+- [x] Probar la Consulta 1 con un estudiante que tenga varias habilidades. Verificar el orden por habilidad y nivel.
+- [x] Probar la Consulta 2 con varios estudiantes, incluyendo dos con el mismo promedio. Verificar que el empate se ordena por nombre y apellido.
+- [x] Probar las dos consultas con legajos y códigos que no existen, y con resultados vacíos.
 - [ ] Estudiar a fondo esta unit para la defensa: validaciones del alta, carga en vector y ordenamiento burbuja.
 
 ### Cualquiera de los dos
@@ -81,7 +79,7 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
 - [ ] **Confirmar o cambiar estas decisiones**, que el enunciado no aclara:
   - La baja es lógica: el registro queda en el archivo con `activo := False`.
   - Dar de baja un estudiante o una habilidad no da de baja sus competencias.
-  - La Consulta 1 ordena por nombre de habilidad y después por nivel, de menor a mayor.
+  - La Consulta 1 ordena por nombre de habilidad y después por nivel, de mayor a menor.
   - La Consulta 2 ordena por promedio de mayor a menor, y ante empate por nombre y apellido alfabético.
   - En la modificación no se puede cambiar el legajo ni el código de habilidad, porque son las claves.
   - Si se escribe una letra donde va un número (año, promedio, porcentaje), el programa se corta con error. El nivel de dominio ya valida la entrada y vuelve a pedirla.
@@ -90,3 +88,10 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
 - [ ] **Prueba completa** en una sola PC, con el juego de datos de prueba, recorriendo todos los puntos del enunciado.
 - [ ] **Preparar la defensa:** cada uno le explica su bloque al otro. La defensa es teórica y práctica, así que los dos tienen que poder explicar todo el código.
 - [ ] **Revisión previa a la defensa:** enviar el trabajo al corrector del turno que corresponda (los mails están en el enunciado).
+
+
+## Datos de prueba
+
+Ejecutar `powershell -File scripts/PopularDatos.ps1` para cargar 5 estudiantes, 5 habilidades y 10 competencias. Si ya existen datos, usar `-Reemplazar` para guardarlos en un respaldo y cargar los ejemplos.
+
+Las pruebas se ejecutan con `powershell -File tests/PruebaBloqueB.ps1`.

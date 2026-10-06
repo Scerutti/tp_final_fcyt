@@ -218,8 +218,8 @@ var
 begin
   for i := 1 to n - 1 do
     for j := 1 to n - i do
-      if (v[j].nombre > v[j + 1].nombre) or
-         ((v[j].nombre = v[j + 1].nombre) and (v[j].nivelDominio > v[j + 1].nivelDominio)) then
+      if (v[j].nombre < v[j + 1].nombre) or
+         ((v[j].nombre = v[j + 1].nombre) and (v[j].nivelDominio < v[j + 1].nivelDominio)) then
       begin
         aux := v[j];
         v[j] := v[j + 1];
