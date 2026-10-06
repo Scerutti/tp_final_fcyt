@@ -18,9 +18,9 @@ Sale con código 0 si pasan todas, y 1 si alguna falla.
 
 ## Estado actual
 
-39 pasan, 5 fallan.
+40 pasan, 4 fallan.
 
-Las 5 que fallan son limitaciones conocidas, no errores nuevos:
+Las 4 que fallan son limitaciones conocidas, no errores nuevos:
 
 | Caso | Motivo |
 |---|---|
@@ -28,8 +28,7 @@ Las 5 que fallan son limitaciones conocidas, no errores nuevos:
 | Año con letras | `EInOutError: Invalid input`. `readln` sobre un número se corta con texto. |
 | Promedio con coma (`8,5`) | Igual. Hay que usar punto. |
 | Promedio vacío (ENTER) | Igual. |
-| Nivel de dominio con texto | Igual, en `LeerNivel` de `UnitCompetencias`. |
 
-Para que dejen de fallar hay que leer esos campos como texto y convertirlos con `Val`, volviendo a pedir el dato si no es válido. El enunciado no lo exige.
+Para que dejen de fallar hay que leer esos campos como texto y convertirlos con `Val`, volviendo a pedir el dato si no es válido, como ya hace `LeerNivel` en `UnitCompetencias`.
 
 `PruebaBloqueB.ps1` es el runner anterior, solo del bloque B. Sigue acá, pero `run-tests.ps1` ya cubre esos mismos casos.

@@ -144,15 +144,15 @@ try {
         Probar 'alta con legajo inexistente' 'PruebaBloqueB' 'alta-rechazada' "E99" @('No existe un estudiante', 'VERIFICADO')
         Probar 'alta con codigo inexistente' 'PruebaBloqueB' 'alta-rechazada' "E1`nH99" @('No existe una habilidad', 'VERIFICADO')
         Probar 'alta con par repetido' 'PruebaBloqueB' 'alta-rechazada' "E1`nH1" @('ya tiene registrada', 'VERIFICADO')
-        Probar 'alta y niveles invalidos' 'PruebaBloqueB' 'alta' "E5`nH1`n0`n6`n3" @('VERIFICADO', 'El nivel debe estar entre 1 y 5.')
+        Probar 'alta y niveles invalidos' 'PruebaBloqueB' 'alta' "E5`nH1`n0`n6`ntexto`n`n9999999999999`n3" @('VERIFICADO', 'El nivel debe estar entre 1 y 5.')
         Probar 'modificar validando el nivel' 'PruebaBloqueB' 'modificar' "E1`nH1`n0`n6`n1" @('Competencia modificada.', 'VERIFICADO')
         Probar 'modificar competencia inexistente' 'PruebaBloqueB' 'modificar-inexistente' "E99`nH1" @('No existe esa competencia.')
         Probar 'baja de competencia inexistente' 'PruebaBloqueB' 'baja-inexistente' "E99`nH1" @('No existe esa competencia.')
         Probar 'baja logica' 'PruebaBloqueB' 'baja' "E1`nH1`nE1" @('Competencia dada de baja.', 'VERIFICADO') @('Programacion (H1')
-        Probar 'nivel con texto' 'PruebaBloqueB' 'alta' "E5`nH1`ntexto`n3" @()
+        Probar 'nivel con texto vuelve a pedirlo' 'PruebaBloqueB' 'alta' "E5`nH1`ntexto`n3" @('El nivel debe estar entre 1 y 5.', 'Competencia registrada.', 'VERIFICADO')
 
         Suite 'Consulta por legajo'
-        Probar 'ordena por habilidad y nivel' 'PruebaBloqueB' 'legajo' 'E1' @() @() @('Analisis (H3', 'Analisis (H2', 'Programacion (H1', 'Redes (H4')
+        Probar 'ordena por habilidad y nivel' 'PruebaBloqueB' 'legajo' 'E1' @() @() @('Redes (H4', 'Programacion (H1', 'Analisis (H2', 'Analisis (H3')
         Probar 'legajo inexistente' 'PruebaBloqueB' 'legajo' 'E99' @('No existe un estudiante')
         Probar 'estudiante sin habilidades' 'PruebaBloqueB' 'legajo' 'E5' @('no posee habilidades registradas')
 
