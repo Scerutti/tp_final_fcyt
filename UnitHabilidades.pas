@@ -20,7 +20,12 @@ procedure ListarHabilidades(var archH: FileHabilidades);
 implementation
 
 procedure AbrirHabilidades(var archH: FileHabilidades);
+var
+  carpeta: string;
 begin
+  carpeta := ExtractFilePath(RUTA_HABILIDADES);
+  if (carpeta <> '') and (not DirectoryExists(carpeta)) then
+    ForceDirectories(carpeta);
   Assign(archH, RUTA_HABILIDADES);
   if FileExists(RUTA_HABILIDADES) then
     Reset(archH)

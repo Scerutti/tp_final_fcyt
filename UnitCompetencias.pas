@@ -45,7 +45,12 @@ var
   candidatos: TVectorCandidatos;
 
 procedure AbrirCompetencias(var archC: FileCompetencias);
+var
+  carpeta: string;
 begin
+  carpeta := ExtractFilePath(RUTA_COMPETENCIAS);
+  if (carpeta <> '') and (not DirectoryExists(carpeta)) then
+    ForceDirectories(carpeta);
   Assign(archC, RUTA_COMPETENCIAS);
   if FileExists(RUTA_COMPETENCIAS) then
     Reset(archC)

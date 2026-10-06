@@ -21,7 +21,12 @@ procedure ListarEstudiantes(var archE: FileEstudiantes);
 implementation
 
 procedure AbrirEstudiantes(var archE: FileEstudiantes);
+var
+  carpeta: string;
 begin
+  carpeta := ExtractFilePath(RUTA_ESTUDIANTES);
+  if (carpeta <> '') and (not DirectoryExists(carpeta)) then
+    ForceDirectories(carpeta);
   Assign(archE, RUTA_ESTUDIANTES);
   if FileExists(RUTA_ESTUDIANTES) then
     Reset(archE)
@@ -72,18 +77,50 @@ begin
   writeln('----------------------------------------');
 end;
 
+function LeerEntero(mensaje: string; minimo, maximo: LongInt): LongInt;
+var
+  entrada: string;
+  valor, error: LongInt;
+  valido: Boolean;
+begin
+  repeat
+    write(mensaje);
+    readln(entrada);
+    Val(Trim(entrada), valor, error);
+    valido := (error = 0) and (valor >= minimo) and (valor <= maximo);
+    if not valido then
+      writeln('Ingrese un numero entero entre ', minimo, ' y ', maximo, '.');
+  until valido;
+  LeerEntero := valor;
+end;
+
+function LeerReal(mensaje: string; minimo, maximo: Real): Real;
+var
+  entrada: string;
+  valor: Real;
+  error: LongInt;
+  valido: Boolean;
+begin
+  repeat
+    write(mensaje);
+    readln(entrada);
+    Val(Trim(entrada), valor, error);
+    valido := (error = 0) and (valor >= minimo) and (valor <= maximo);
+    if not valido then
+      writeln('Ingrese un numero entre ', minimo:0:2, ' y ', maximo:0:2, ' usando punto decimal.');
+  until valido;
+  LeerReal := valor;
+end;
+
 procedure LeerDatosEstudiante(var est: TEstudiante);
 begin
   write('Nombre y apellido: ');
   readln(est.nombreApellido);
   write('Carrera: ');
   readln(est.carrera);
-  write('Anio de ingreso: ');
-  readln(est.anioIngreso);
-  write('Promedio: ');
-  readln(est.promedio);
-  write('Porcentaje de avance en carrera: ');
-  readln(est.porcentajeAvance);
+  est.anioIngreso := LeerEntero('Anio de ingreso: ', 1900, 2100);
+  est.promedio := LeerReal('Promedio: ', 0, 10);
+  est.porcentajeAvance := LeerReal('Porcentaje de avance en carrera: ', 0, 100);
 end;
 
 procedure AltaEstudiante(var archE: FileEstudiantes);
