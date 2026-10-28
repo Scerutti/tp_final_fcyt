@@ -14,7 +14,8 @@ Ya están implementados todos los puntos del enunciado:
 | `UnitEstudiantes.pas` | Apertura, carga, ABM y listado de estudiantes |
 | `UnitHabilidades.pas` | Apertura, carga, ABM y listado de habilidades |
 | `UnitCompetencias.pas` | Apertura, carga, ABM y listado de competencias, Consulta 1 y Consulta 2 |
-| `UnitPresentacion.pas` | Logo, menús, encabezados y pie de pantalla |
+| `UnitPresentacion.pas` | Logo, menús, encabezados, pantalla de edición y pie de pantalla |
+| `UnitUtilidades.pas` | Tamaño de pantalla, tablas paginadas, confirmación S/N y lectura de números |
 | `main.pas` | Programa principal con los menús |
 
 Lo que falta es probar todo, cerrar algunas decisiones y preparar la defensa.
@@ -92,6 +93,6 @@ Para probar hacen falta estudiantes y habilidades cargados. Usá los menús de E
 
 ## Datos de prueba
 
-Ejecutar `powershell -File scripts/PopularDatos.ps1` para cargar 5 estudiantes, 5 habilidades y 10 competencias. Si ya existen datos, usar `-Reemplazar` para guardarlos en un respaldo y cargar los ejemplos.
+Ejecutar `python scripts/PopularDatos.py` para cargar 5 estudiantes, 5 habilidades y 10 competencias. Funciona en Windows, Linux y Mac; solo necesita Python 3 y `fpc` en el PATH. En Linux y Mac puede que el comando sea `python3`. Si ya existen datos, usar `--reemplazar` para guardarlos en un respaldo (`docs/respaldo-<fecha>-<hora>`) y cargar los ejemplos.
 
 Las pruebas se ejecutan con `powershell -File tests/PruebaBloqueB.ps1`.

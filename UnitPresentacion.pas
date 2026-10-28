@@ -6,18 +6,19 @@ procedure MostrarPresentacion;
 procedure MostrarMenu(titulo: string; opciones: array of string; opcionSalida: string);
 procedure MostrarTituloSeccion(seccion, titulo: string);
 procedure MostrarAviso(mensaje: string);
+procedure MostrarEstadoActual(seccion, titulo: string);
+procedure MostrarOpcionesEdicion(campos: array of string; aviso: string);
+procedure MostrarCampoElegido(campo: string);
 procedure Pausa;
-procedure PaginarListado(lineasSiguientes: Integer);
+function PaginarListado(lineasSiguientes: Integer; cierre: string): Boolean;
 procedure MostrarDespedida;
 
 implementation
 
 uses
-  Crt;
+  Crt, UnitUtilidades;
 
 const
-  MARGEN = 3;
-  ANCHO = 70;
   ANCHO_LOGO = 58;
   LARGO_BARRA = 40;
   COLOR_BORDE = LightBlue;
@@ -34,21 +35,11 @@ const
 
   COLORES_LOGO: array[1..5] of Byte = (LightGray, Cyan, Cyan, Blue, Blue);
 
+  MARGEN = 3;
   ANCHO_VENTANA = ANCHO + 2 + 2 * MARGEN;
 
 var
   anchoPantalla, altoPantalla, filaInicio: Integer;
-
-function Repetir(c: Char; n: Integer): string;
-var
-  s: string;
-  i: Integer;
-begin
-  s := '';
-  for i := 1 to n do
-    s := s + c;
-  Repetir := s;
-end;
 
 procedure PrepararPantalla(alto: Integer);
 var
@@ -67,18 +58,17 @@ begin
     filaInicio := (altoPantalla - alto) div 2 + 1
   else
     filaInicio := 1;
-  Window(izquierda, filaInicio, derecha, altoPantalla);
+  Window(izquierda + MARGEN, filaInicio, derecha, altoPantalla);
 end;
 
-procedure IrMargen;
+procedure FondoNegro;
 begin
   TextBackground(Black);
-  write('': MARGEN);
 end;
 
 procedure AbrirLinea;
 begin
-  IrMargen;
+  FondoNegro;
   TextColor(COLOR_BORDE);
   write('|');
 end;
@@ -102,7 +92,7 @@ procedure Borde(relleno: Char; texto: string);
 var
   resto: Integer;
 begin
-  IrMargen;
+  FondoNegro;
   TextColor(COLOR_BORDE);
   if texto = '' then
     write('+', Repetir(relleno, ANCHO), '+')
@@ -259,7 +249,7 @@ begin
   TextBackground(Black);
   GotoXY(1, filaFinal);
   writeln;
-  IrMargen;
+  FondoNegro;
   TextColor(LightGreen);
   write('>> ');
   TextColor(White);
@@ -329,19 +319,79 @@ end;
 procedure MostrarAviso(mensaje: string);
 begin
   MostrarTituloSeccion('AVISO', 'Atencion');
-  IrMargen;
+  FondoNegro;
   TextColor(LightRed);
   writeln('! ', mensaje);
   Pausa;
 end;
 
+procedure MostrarEstadoActual(seccion, titulo: string);
+begin
+  MostrarTituloSeccion(seccion, titulo);
+  FondoNegro;
+  TextColor(Yellow);
+  writeln('ESTADO ACTUAL');
+  TextColor(LightGray);
+end;
+
+procedure DibujarOpcionEdicion(numero: Integer; texto: string; fondo: Byte);
+begin
+  FondoNegro;
+  write('  ');
+  TextBackground(fondo);
+  TextColor(White);
+  write(' ', numero, ' ');
+  TextBackground(Black);
+  TextColor(LightGray);
+  writeln('  ', texto);
+end;
+
+procedure MostrarOpcionesEdicion(campos: array of string; aviso: string);
+var
+  i: Integer;
+begin
+  writeln;
+  FondoNegro;
+  TextColor(Yellow);
+  writeln('Que desea modificar?');
+  for i := 0 to High(campos) do
+    DibujarOpcionEdicion(i + 1, campos[i], Cyan);
+  DibujarOpcionEdicion(0, 'Volver', Red);
+  if aviso <> '' then
+  begin
+    writeln;
+    FondoNegro;
+    TextColor(LightGreen);
+    writeln('* ', aviso);
+  end;
+  writeln;
+  FondoNegro;
+  TextColor(LightGreen);
+  write('>> ');
+  TextColor(White);
+  write('Ingrese una opcion: ');
+  TextColor(Yellow);
+end;
+
+procedure MostrarCampoElegido(campo: string);
+begin
+  writeln;
+  FondoNegro;
+  TextColor(Yellow);
+  write('Modificando: ');
+  TextColor(White);
+  writeln(campo);
+  writeln;
+  TextColor(LightGray);
+end;
+
 procedure Pausa;
 begin
   writeln;
-  IrMargen;
+  FondoNegro;
   TextColor(DarkGray);
   writeln(Repetir('-', ANCHO + 2));
-  IrMargen;
+  FondoNegro;
   TextColor(LightGreen);
   write('>> ');
   TextColor(White);
@@ -350,11 +400,16 @@ begin
   TextColor(LightGray);
 end;
 
-
-procedure PaginarListado(lineasSiguientes: Integer);
+function PaginarListado(lineasSiguientes: Integer; cierre: string): Boolean;
+var
+  cortar: Boolean;
 begin
-  if WhereY + lineasSiguientes + 3 > WindMaxY - WindMinY + 1 then
+  cortar := WhereY + lineasSiguientes + 3 > WindMaxY - WindMinY + 1;
+  if cortar then
   begin
+    FondoNegro;
+    if cierre <> '' then
+      writeln(cierre);
     TextColor(LightGreen);
     write('>> ');
     TextColor(White);
@@ -363,6 +418,7 @@ begin
     TextColor(LightGray);
     ClrScr;
   end;
+  PaginarListado := cortar;
 end;
 
 procedure MostrarDespedida;

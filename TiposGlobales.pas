@@ -31,7 +31,7 @@ type
   end;
   FileCompetencias = file of TCompetencia;
 
-  TPaginador = procedure(lineasSiguientes: Integer);
+  TPaginador = function(lineasSiguientes: Integer; cierre: string): Boolean;
 
 var
   Paginador: TPaginador = nil;
