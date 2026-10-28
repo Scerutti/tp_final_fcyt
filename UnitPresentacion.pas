@@ -6,17 +6,18 @@ procedure MostrarPresentacion;
 procedure MostrarMenu(titulo: string; opciones: array of string; opcionSalida: string);
 procedure MostrarTituloSeccion(seccion, titulo: string);
 procedure MostrarAviso(mensaje: string);
+procedure MostrarEstadoActual(seccion, titulo: string);
+procedure MostrarOpcionesEdicion(campos: array of string; aviso: string);
+procedure MostrarCampoElegido(campo: string);
 procedure Pausa;
 procedure MostrarDespedida;
 
 implementation
 
 uses
-  Crt;
+  Crt, UnitUtilidades;
 
 const
-  MARGEN = 3;
-  ANCHO = 70;
   ANCHO_LOGO = 58;
   LARGO_BARRA = 40;
   COLOR_BORDE = LightBlue;
@@ -32,17 +33,6 @@ const
   );
 
   COLORES_LOGO: array[1..5] of Byte = (LightGray, Cyan, Cyan, Blue, Blue);
-
-function Repetir(c: Char; n: Integer): string;
-var
-  s: string;
-  i: Integer;
-begin
-  s := '';
-  for i := 1 to n do
-    s := s + c;
-  Repetir := s;
-end;
 
 procedure IrMargen;
 begin
@@ -310,6 +300,66 @@ begin
   TextColor(LightRed);
   writeln('! ', mensaje);
   Pausa;
+end;
+
+procedure MostrarEstadoActual(seccion, titulo: string);
+begin
+  MostrarTituloSeccion(seccion, titulo);
+  IrMargen;
+  TextColor(Yellow);
+  writeln('ESTADO ACTUAL');
+  TextColor(LightGray);
+end;
+
+procedure DibujarOpcionEdicion(numero: Integer; texto: string; fondo: Byte);
+begin
+  IrMargen;
+  write('  ');
+  TextBackground(fondo);
+  TextColor(White);
+  write(' ', numero, ' ');
+  TextBackground(Black);
+  TextColor(LightGray);
+  writeln('  ', texto);
+end;
+
+procedure MostrarOpcionesEdicion(campos: array of string; aviso: string);
+var
+  i: Integer;
+begin
+  writeln;
+  IrMargen;
+  TextColor(Yellow);
+  writeln('Que desea modificar?');
+  for i := 0 to High(campos) do
+    DibujarOpcionEdicion(i + 1, campos[i], Cyan);
+  DibujarOpcionEdicion(0, 'Volver', Red);
+  if aviso <> '' then
+  begin
+    writeln;
+    IrMargen;
+    TextColor(LightGreen);
+    writeln('* ', aviso);
+  end;
+  writeln;
+  IrMargen;
+  TextColor(LightGreen);
+  write('>> ');
+  TextColor(White);
+  write('Ingrese una opcion: ');
+  TextColor(Yellow);
+end;
+
+procedure MostrarCampoElegido(campo: string);
+begin
+  writeln;
+  IrMargen;
+  TextColor(Yellow);
+  write('Modificando: ');
+  TextColor(White);
+  writeln(campo);
+  writeln;
+  TextColor(LightGray);
 end;
 
 procedure Pausa;

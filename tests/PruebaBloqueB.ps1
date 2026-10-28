@@ -26,17 +26,16 @@ try {
             Write-Host "OK: $nombre"
             return $salida
         }
-        $null = Probar 'Legajo inexistente' 'alta-rechazada' "E99" @('No existe un estudiante', 'VERIFICADO')
-        $null = Probar 'Codigo inexistente' 'alta-rechazada' "E1`nH99" @('No existe una habilidad', 'VERIFICADO')
-        $null = Probar 'Par repetido' 'alta-rechazada' "E1`nH1" @('ya tiene registrada', 'VERIFICADO')
-        $null = Probar 'Alta y niveles invalidos' 'alta' "E5`nH1`n0`n6`ntexto`n`n9999999999999`n3" @('VERIFICADO', 'El nivel debe estar entre 1 y 5.')
-        $null = Probar 'Modificar y validar nivel' 'modificar' "E1`nH1`n0`n6`n1" @('Competencia modificada.', 'VERIFICADO')
-        $null = Probar 'Modificar inexistente' 'modificar-inexistente' "E99`nH1" @('No existe esa competencia.')
+        $null = Probar 'Legajo inexistente' 'alta-rechazada' "E99`nN" @('No existe un estudiante', 'VERIFICADO')
+        $null = Probar 'Codigo inexistente' 'alta-rechazada' "E1`nH99`nN" @('No existe una habilidad', 'VERIFICADO')
+        $null = Probar 'Par repetido' 'alta-rechazada' "E1`nH1`nN" @('ya tiene registrada', 'VERIFICADO')
+        $null = Probar 'Alta y niveles invalidos' 'alta' "E5`nH1`n0`n6`ntexto`n`n9999999999999`n3`nN" @('VERIFICADO', 'El nivel debe estar entre 1 y 5.')
+        $null = Probar 'Modificar y validar nivel' 'modificar' "0`n6`n1" @('El nivel debe estar entre 1 y 5.', 'VERIFICADO')
         $null = Probar 'Baja inexistente' 'baja-inexistente' "E99`nH1" @('No existe esa competencia.')
-        $null = Probar 'Baja logica y consulta' 'baja' "E1`nH1`nE1" @('Competencia dada de baja.', 'VERIFICADO') @('Programacion (H1')
-        $salida = Probar 'Consulta 1' 'legajo' 'E1' @('Redes (H4', 'Programacion (H1', 'Analisis (H2', 'Analisis (H3')
+        $null = Probar 'Baja logica y consulta' 'baja' "E1`nH1`nS`nE1" @('Competencia dada de baja.', 'VERIFICADO') @('| H1 ')
+        $salida = Probar 'Consulta 1' 'legajo' 'E1' @('| H4 ', '| H1 ', '| H2 ', '| H3 ')
         $anterior = -1
-        foreach ($texto in @('Redes (H4', 'Programacion (H1', 'Analisis (H2', 'Analisis (H3')) {
+        foreach ($texto in @('| H4 ', '| H1 ', '| H2 ', '| H3 ')) {
             $indice = $salida.IndexOf($texto)
             if ($indice -le $anterior) { throw 'Orden incorrecto de Consulta 1.' }
             $anterior = $indice
@@ -53,7 +52,7 @@ try {
         $null = Probar 'Consulta 2 inexistente' 'habilidad' 'H99' @('No existe una habilidad')
         $null = Probar 'Consulta 2 vacia' 'habilidad' "H5`n5" @('No hay estudiantes con esa habilidad y nivel minimo.')
         $null = Probar 'Filtro por nivel minimo' 'habilidad' "H1`n5" @('Luis Gomez') @('Ana Torres', 'Zoe Perez', 'Bruno Diaz')
-        $null = Probar 'Referencias inactivas' 'inactivos' "E1`nH1`n2" @('Analisis (H3', 'Ana Torres', 'Zoe Perez') @('Analisis (H2', 'Luis Gomez')
+        $null = Probar 'Referencias inactivas' 'inactivos' "E1`nH1`n2" @('| H3 ', 'Ana Torres', 'Zoe Perez') @('| H2 ', 'Luis Gomez')
         Write-Host 'Las 16 pruebas del bloque B pasaron.'
     } finally { Pop-Location }
 } finally {

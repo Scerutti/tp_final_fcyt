@@ -43,43 +43,58 @@ begin
   accion := ParamStr(1);
   if accion = 'est-alta' then
   begin
-    AltaEstudiante(e);
+    CargarEstudiantes(e);
     Comprobar((FileSize(e) = 4) and (BuscarEstudiante(e, '1004', est) = 3));
     Comprobar((est.nombreApellido = 'Diego Sosa') and (est.anioIngreso = 2024) and est.activo);
   end
   else if accion = 'est-alta-nombre-vacio' then
   begin
-    AltaEstudiante(e);
+    CargarEstudiantes(e);
     Comprobar((FileSize(e) = 4) and (BuscarEstudiante(e, '1004', est) = 3));
     Comprobar(est.nombreApellido = '');
   end
   else if accion = 'est-alta-legajo-dup' then
   begin
-    AltaEstudiante(e); Comprobar(FileSize(e) = 3);
+    CargarEstudiantes(e); Comprobar(FileSize(e) = 3);
   end
   else if accion = 'est-alta-dni-dup' then
   begin
-    AltaEstudiante(e); Comprobar(FileSize(e) = 3);
+    CargarEstudiantes(e); Comprobar(FileSize(e) = 3);
   end
   else if accion = 'est-modificar-dni-ajeno' then
   begin
-    ModificarEstudiante(e);
+    i := BuscarEstudiante(e, '1002', est);
+    Comprobar(not LeerCampoEstudiante(e, i, 1, est));
     Comprobar(BuscarEstudiante(e, '1002', est) = 1);
     Comprobar(est.dni = '31222333');
   end
   else if accion = 'est-modificar' then
   begin
-    ModificarEstudiante(e);
+    i := BuscarEstudiante(e, '1002', est);
+    Comprobar(LeerCampoEstudiante(e, i, 1, est));
+    Comprobar(LeerCampoEstudiante(e, i, 3, est));
+    GuardarEstudiante(e, i, est);
     Comprobar(BuscarEstudiante(e, '1002', est) = 1);
     Comprobar((est.carrera = 'Ingenieria') and (est.dni = '31222333') and (FileSize(e) = 3));
   end
-  else if accion = 'est-modificar-inexistente' then ModificarEstudiante(e)
+  else if accion = 'est-modificar-promedio' then
+  begin
+    i := BuscarEstudiante(e, '1001', est);
+    Comprobar(LeerCampoEstudiante(e, i, 5, est));
+    GuardarEstudiante(e, i, est);
+    Comprobar((BuscarEstudiante(e, '1001', est) = 0) and (est.promedio = 9.5) and (est.nombreApellido = 'Ana Perez'));
+  end
   else if accion = 'est-baja' then
   begin
     BajaEstudiante(e);
     Comprobar((FileSize(e) = 3) and (BuscarEstudiante(e, '1003', est) = -1));
     Seek(e, 2); Read(e, est); Comprobar(not est.activo);
     ListarEstudiantes(e);
+  end
+  else if accion = 'est-baja-cancelada' then
+  begin
+    BajaEstudiante(e);
+    Comprobar(BuscarEstudiante(e, '1003', est) = 2);
   end
   else if accion = 'est-baja-inexistente' then BajaEstudiante(e)
   else if accion = 'est-listar' then ListarEstudiantes(e)
@@ -89,7 +104,7 @@ begin
   end
   else if accion = 'est-clave-larga' then
   begin
-    AltaEstudiante(e);
+    CargarEstudiantes(e);
     Comprobar((FileSize(e) = 4) and (BuscarEstudiante(e, '1234567890', est) = 3));
     BajaEstudiante(e);
     Comprobar(BuscarEstudiante(e, '1234567890', est) = -1);
@@ -97,7 +112,7 @@ begin
   else if accion = 'est-reusar-legajo' then
   begin
     BajaEstudiante(e);
-    AltaEstudiante(e);
+    CargarEstudiantes(e);
     Comprobar((FileSize(e) = 4) and (BuscarEstudiante(e, '1003', est) = 3));
     Comprobar(est.nombreApellido = 'Fabio Sol');
   end
@@ -122,26 +137,32 @@ begin
   end
   else if accion = 'hab-alta' then
   begin
-    AltaHabilidad(h);
+    CargarHabilidades(h);
     Comprobar((FileSize(h) = 4) and (BuscarHabilidad(h, 'REDE01', hab) = 3));
     Comprobar((hab.nombre = 'Redes') and hab.activa);
   end
   else if accion = 'hab-alta-dup' then
   begin
-    AltaHabilidad(h); Comprobar(FileSize(h) = 3);
+    CargarHabilidades(h); Comprobar(FileSize(h) = 3);
   end
   else if accion = 'hab-modificar' then
   begin
-    ModificarHabilidad(h);
+    i := BuscarHabilidad(h, 'COMU01', hab);
+    LeerCampoHabilidad(1, hab);
+    GuardarHabilidad(h, i, hab);
     Comprobar(BuscarHabilidad(h, 'COMU01', hab) = 1);
     Comprobar((hab.nombre = 'Oratoria') and (hab.categoria = 'Blanda') and (FileSize(h) = 3));
   end
-  else if accion = 'hab-modificar-inexistente' then ModificarHabilidad(h)
   else if accion = 'hab-baja' then
   begin
     BajaHabilidad(h);
     Comprobar((FileSize(h) = 3) and (BuscarHabilidad(h, 'INGL01', hab) = -1));
     ListarHabilidades(h);
+  end
+  else if accion = 'hab-baja-cancelada' then
+  begin
+    BajaHabilidad(h);
+    Comprobar(BuscarHabilidad(h, 'INGL01', hab) = 2);
   end
   else if accion = 'hab-baja-inexistente' then BajaHabilidad(h)
   else if accion = 'hab-listar' then ListarHabilidades(h)
@@ -151,7 +172,7 @@ begin
   end
   else if accion = 'hab-clave-larga' then
   begin
-    AltaHabilidad(h);
+    CargarHabilidades(h);
     Comprobar((FileSize(h) = 4) and (BuscarHabilidad(h, 'REDES12345', hab) = 3));
     BajaHabilidad(h);
     Comprobar(BuscarHabilidad(h, 'REDES12345', hab) = -1);

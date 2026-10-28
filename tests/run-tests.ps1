@@ -136,58 +136,60 @@ try {
 
     if ($compilaA) {
         Suite 'Estudiantes'
-        Probar 'alta valida' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n30" @('Estudiante registrado.', 'VERIFICADO')
-        Probar 'alta con legajo repetido' 'PruebaBloqueA' 'est-alta-legajo-dup' "1001" @('Ya existe un estudiante con ese legajo.') @('DNI:')
-        Probar 'alta con DNI repetido' 'PruebaBloqueA' 'est-alta-dni-dup' "1004`n30111222" @('Ya existe un estudiante con ese DNI.')
-        Probar 'modificar con el DNI de otro' 'PruebaBloqueA' 'est-modificar-dni-ajeno' "1002`n30111222" @('Ya existe otro estudiante con ese DNI.', 'VERIFICADO')
-        Probar 'modificar conservando su DNI' 'PruebaBloqueA' 'est-modificar' "1002`n31222333`nBruno Diaz`nIngenieria`n2023`n7.5`n45" @('Estudiante modificado.', 'VERIFICADO')
-        Probar 'modificar legajo inexistente' 'PruebaBloqueA' 'est-modificar-inexistente' "9999" @('No existe un estudiante con ese legajo.')
-        Probar 'baja logica' 'PruebaBloqueA' 'est-baja' "1003" @('Estudiante dado de baja.', 'VERIFICADO', 'Ana Perez') @('Carla Luna')
+        Probar 'alta valida' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n30`nN" @('Estudiante registrado.', 'VERIFICADO')
+        Probar 'alta con legajo repetido' 'PruebaBloqueA' 'est-alta-legajo-dup' "1001`nN" @('Ya existe un estudiante con ese legajo.') @('DNI:')
+        Probar 'alta con DNI repetido' 'PruebaBloqueA' 'est-alta-dni-dup' "1004`n30111222`nN" @('Ya existe un estudiante con ese DNI.')
+        Probar 'respuesta invalida al cargar otro' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n30`nquizas`nN" @('Responda S o N.', 'VERIFICADO')
+        Probar 'modificar con el DNI de otro' 'PruebaBloqueA' 'est-modificar-dni-ajeno' "30111222" @('Ya existe otro estudiante con ese DNI.', 'VERIFICADO')
+        Probar 'modificar conservando su DNI' 'PruebaBloqueA' 'est-modificar' "31222333`nIngenieria" @('VERIFICADO') @('Ya existe otro estudiante con ese DNI.')
+        Probar 'modificar un solo campo' 'PruebaBloqueA' 'est-modificar-promedio' "11`n9.5" @('Ingrese un numero entre 0.00 y 10.00', 'VERIFICADO')
+        Probar 'baja logica' 'PruebaBloqueA' 'est-baja' "1003`nS" @('Estudiante dado de baja.', 'VERIFICADO', 'Ana Perez')
+        Probar 'baja cancelada' 'PruebaBloqueA' 'est-baja-cancelada' "1003`nN" @('Baja cancelada.', 'VERIFICADO') @('Estudiante dado de baja.')
         Probar 'baja de legajo inexistente' 'PruebaBloqueA' 'est-baja-inexistente' "9999" @('No existe un estudiante con ese legajo.')
-        Probar 'listado general' 'PruebaBloqueA' 'est-listar' '' @('Ana Perez', 'Bruno Diaz', 'Carla Luna')
+        Probar 'listado general' 'PruebaBloqueA' 'est-listar' '' @('| Legajo', 'Ana Perez', 'Bruno Diaz', 'Carla Luna', 'Total: 3')
         Probar 'listado sin registros' 'PruebaBloqueA' 'est-listar-vacio' '' @('No hay estudiantes registrados.')
-        Probar 'legajo de mas de 10 caracteres' 'PruebaBloqueA' 'est-clave-larga' "1234567890AB`n34555666`nElsa Vera`nSistemas`n2025`n8`n20`n1234567890AB" @('Estudiante registrado.', 'Estudiante dado de baja.', 'VERIFICADO')
-        Probar 'reusar el legajo de una baja' 'PruebaBloqueA' 'est-reusar-legajo' "1003`n1003`n35666777`nFabio Sol`nSistemas`n2026`n7`n10" @('Estudiante dado de baja.', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'legajo de mas de 10 caracteres' 'PruebaBloqueA' 'est-clave-larga' "1234567890AB`n34555666`nElsa Vera`nSistemas`n2025`n8`n20`nN`n1234567890AB`nS" @('Estudiante registrado.', 'Estudiante dado de baja.', 'VERIFICADO')
+        Probar 'reusar el legajo de una baja' 'PruebaBloqueA' 'est-reusar-legajo' "1003`nS`n1003`n35666777`nFabio Sol`nSistemas`n2026`n7`n10`nN" @('Estudiante dado de baja.', 'Estudiante registrado.', 'VERIFICADO')
         Probar 'carga de varios estudiantes' 'PruebaBloqueA' 'est-cargar' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n30`nS`n1005`n34555666`nElsa Vera`nSistemas`n2025`n8`n20`nN" @('VERIFICADO')
 
         Suite 'Habilidades'
-        Probar 'alta valida' 'PruebaBloqueA' 'hab-alta' "REDE01`nRedes`nTecnica" @('Habilidad registrada.', 'VERIFICADO')
-        Probar 'alta con codigo repetido' 'PruebaBloqueA' 'hab-alta-dup' "PROG01" @('Ya existe una habilidad con ese codigo.') @('Nombre:')
-        Probar 'modificar nombre y categoria' 'PruebaBloqueA' 'hab-modificar' "COMU01`nOratoria`nBlanda" @('Habilidad modificada.', 'VERIFICADO')
-        Probar 'modificar codigo inexistente' 'PruebaBloqueA' 'hab-modificar-inexistente' "XXXX" @('No existe una habilidad con ese codigo.')
-        Probar 'baja logica' 'PruebaBloqueA' 'hab-baja' "INGL01" @('Habilidad dada de baja.', 'VERIFICADO', 'Programacion') @('Ingles')
+        Probar 'alta valida' 'PruebaBloqueA' 'hab-alta' "REDE01`nRedes`nTecnica`nN" @('Habilidad registrada.', 'VERIFICADO')
+        Probar 'alta con codigo repetido' 'PruebaBloqueA' 'hab-alta-dup' "PROG01`nN" @('Ya existe una habilidad con ese codigo.') @('Nombre:')
+        Probar 'modificar el nombre' 'PruebaBloqueA' 'hab-modificar' "Oratoria" @('VERIFICADO')
+        Probar 'baja logica' 'PruebaBloqueA' 'hab-baja' "INGL01`nS" @('Habilidad dada de baja.', 'VERIFICADO', 'Programacion')
+        Probar 'baja cancelada' 'PruebaBloqueA' 'hab-baja-cancelada' "INGL01`nN" @('Baja cancelada.', 'VERIFICADO') @('Habilidad dada de baja.')
         Probar 'baja de codigo inexistente' 'PruebaBloqueA' 'hab-baja-inexistente' "XXXX" @('No existe una habilidad con ese codigo.')
-        Probar 'listado general' 'PruebaBloqueA' 'hab-listar' '' @('Programacion', 'Comunicacion', 'Ingles')
+        Probar 'listado general' 'PruebaBloqueA' 'hab-listar' '' @('| Codigo', 'Programacion', 'Comunicacion', 'Ingles', 'Total: 3')
         Probar 'listado sin registros' 'PruebaBloqueA' 'hab-listar-vacio' '' @('No hay habilidades registradas.')
-        Probar 'codigo de mas de 10 caracteres' 'PruebaBloqueA' 'hab-clave-larga' "REDES12345XY`nRedes`nTecnica`nREDES12345XY" @('Habilidad registrada.', 'Habilidad dada de baja.', 'VERIFICADO')
+        Probar 'codigo de mas de 10 caracteres' 'PruebaBloqueA' 'hab-clave-larga' "REDES12345XY`nRedes`nTecnica`nN`nREDES12345XY`nS" @('Habilidad registrada.', 'Habilidad dada de baja.', 'VERIFICADO')
 
         Suite 'Apertura de archivos'
         Probar 'crea el archivo y lo reabre' 'PruebaBloqueA' 'est-abrir' '' @('VERIFICADO')
         Probar 'crea la carpeta docs si falta' 'PruebaBloqueA' 'est-abrir-sin-docs' '' @('VERIFICADO')
 
         Suite 'Entradas invalidas'
-        Probar 'anio con letras vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`nabc`n2024`n6.5`n30" @('Ingrese un numero entero entre 1900 y 2100.', 'Estudiante registrado.', 'VERIFICADO')
-        Probar 'anio fuera de rango vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n1800`n2024`n6.5`n30" @('Ingrese un numero entero entre 1900 y 2100.', 'Estudiante registrado.', 'VERIFICADO')
-        Probar 'promedio con coma vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n8,5`n8.5`n30" @('usando punto decimal', 'Estudiante registrado.', 'VERIFICADO')
-        Probar 'promedio vacio vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n`n7`n30" @('usando punto decimal', 'Estudiante registrado.', 'VERIFICADO')
-        Probar 'porcentaje fuera de rango vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n150`n30" @('Ingrese un numero entre 0.00 y 100.00', 'Estudiante registrado.', 'VERIFICADO')
-        Probar 'nombre vacio se acepta' 'PruebaBloqueA' 'est-alta-nombre-vacio' "1004`n33444555`n`nSistemas`n2024`n6.5`n30" @('Estudiante registrado.', 'VERIFICADO')
+        Probar 'anio con letras vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`nabc`n2024`n6.5`n30`nN" @('Ingrese un numero entero entre 1900 y 2100.', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'anio fuera de rango vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n1800`n2024`n6.5`n30`nN" @('Ingrese un numero entero entre 1900 y 2100.', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'promedio con coma vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n8,5`n8.5`n30`nN" @('usando punto decimal', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'promedio vacio vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n`n7`n30`nN" @('usando punto decimal', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'porcentaje fuera de rango vuelve a pedirlo' 'PruebaBloqueA' 'est-alta' "1004`n33444555`nDiego Sosa`nSistemas`n2024`n6.5`n150`n30`nN" @('Ingrese un numero entre 0.00 y 100.00', 'Estudiante registrado.', 'VERIFICADO')
+        Probar 'nombre vacio se acepta' 'PruebaBloqueA' 'est-alta-nombre-vacio' "1004`n33444555`n`nSistemas`n2024`n6.5`n30`nN" @('Estudiante registrado.', 'VERIFICADO')
     }
 
     if ($compilaB) {
         Suite 'Competencias'
-        Probar 'alta con legajo inexistente' 'PruebaBloqueB' 'alta-rechazada' "E99" @('No existe un estudiante', 'VERIFICADO')
-        Probar 'alta con codigo inexistente' 'PruebaBloqueB' 'alta-rechazada' "E1`nH99" @('No existe una habilidad', 'VERIFICADO')
-        Probar 'alta con par repetido' 'PruebaBloqueB' 'alta-rechazada' "E1`nH1" @('ya tiene registrada', 'VERIFICADO')
-        Probar 'alta y niveles invalidos' 'PruebaBloqueB' 'alta' "E5`nH1`n0`n6`ntexto`n`n9999999999999`n3" @('VERIFICADO', 'El nivel debe estar entre 1 y 5.')
-        Probar 'modificar validando el nivel' 'PruebaBloqueB' 'modificar' "E1`nH1`n0`n6`n1" @('Competencia modificada.', 'VERIFICADO')
-        Probar 'modificar competencia inexistente' 'PruebaBloqueB' 'modificar-inexistente' "E99`nH1" @('No existe esa competencia.')
+        Probar 'alta con legajo inexistente' 'PruebaBloqueB' 'alta-rechazada' "E99`nN" @('No existe un estudiante', 'VERIFICADO')
+        Probar 'alta con codigo inexistente' 'PruebaBloqueB' 'alta-rechazada' "E1`nH99`nN" @('No existe una habilidad', 'VERIFICADO')
+        Probar 'alta con par repetido' 'PruebaBloqueB' 'alta-rechazada' "E1`nH1`nN" @('ya tiene registrada', 'VERIFICADO')
+        Probar 'alta y niveles invalidos' 'PruebaBloqueB' 'alta' "E5`nH1`n0`n6`ntexto`n`n9999999999999`n3`nN" @('VERIFICADO', 'El nivel debe estar entre 1 y 5.')
+        Probar 'modificar validando el nivel' 'PruebaBloqueB' 'modificar' "0`n6`n1" @('El nivel debe estar entre 1 y 5.', 'VERIFICADO')
         Probar 'baja de competencia inexistente' 'PruebaBloqueB' 'baja-inexistente' "E99`nH1" @('No existe esa competencia.')
-        Probar 'baja logica' 'PruebaBloqueB' 'baja' "E1`nH1`nE1" @('Competencia dada de baja.', 'VERIFICADO') @('Programacion (H1')
-        Probar 'nivel con texto vuelve a pedirlo' 'PruebaBloqueB' 'alta' "E5`nH1`ntexto`n3" @('El nivel debe estar entre 1 y 5.', 'Competencia registrada.', 'VERIFICADO')
+        Probar 'baja logica' 'PruebaBloqueB' 'baja' "E1`nH1`nS`nE1" @('Competencia dada de baja.', 'VERIFICADO') @('| H1 ')
+        Probar 'baja cancelada' 'PruebaBloqueB' 'baja-cancelada' "E1`nH1`nN" @('Baja cancelada.', 'VERIFICADO') @('Competencia dada de baja.')
+        Probar 'nivel con texto vuelve a pedirlo' 'PruebaBloqueB' 'alta' "E5`nH1`ntexto`n3`nN" @('El nivel debe estar entre 1 y 5.', 'Competencia registrada.', 'VERIFICADO')
 
         Suite 'Consulta por legajo'
-        Probar 'ordena por habilidad y nivel' 'PruebaBloqueB' 'legajo' 'E1' @() @() @('Redes (H4', 'Programacion (H1', 'Analisis (H2', 'Analisis (H3')
+        Probar 'ordena por habilidad y nivel' 'PruebaBloqueB' 'legajo' 'E1' @() @() @('| H4 ', '| H1 ', '| H2 ', '| H3 ')
         Probar 'legajo inexistente' 'PruebaBloqueB' 'legajo' 'E99' @('No existe un estudiante')
         Probar 'estudiante sin habilidades' 'PruebaBloqueB' 'legajo' 'E5' @('no posee habilidades registradas')
 
@@ -196,7 +198,7 @@ try {
         Probar 'habilidad inexistente' 'PruebaBloqueB' 'habilidad' 'H99' @('No existe una habilidad')
         Probar 'sin resultados' 'PruebaBloqueB' 'habilidad' "H5`n5" @('No hay estudiantes con esa habilidad y nivel minimo.')
         Probar 'filtra por nivel minimo' 'PruebaBloqueB' 'habilidad' "H1`n5" @('Luis Gomez') @('Ana Torres', 'Zoe Perez', 'Bruno Diaz')
-        Probar 'ignora estudiantes y habilidades inactivos' 'PruebaBloqueB' 'inactivos' "E1`nH1`n2" @('Analisis (H3', 'Ana Torres', 'Zoe Perez') @('Analisis (H2', 'Luis Gomez')
+        Probar 'ignora estudiantes y habilidades inactivos' 'PruebaBloqueB' 'inactivos' "E1`nH1`n2" @('| H3 ', 'Ana Torres', 'Zoe Perez') @('| H2 ', 'Luis Gomez')
     }
 
     Write-Host ''

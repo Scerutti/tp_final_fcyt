@@ -3,7 +3,7 @@ unit UnitCompetencias;
 interface
 
 uses
-  SysUtils, TiposGlobales, UnitEstudiantes, UnitHabilidades;
+  SysUtils, TiposGlobales, UnitUtilidades, UnitEstudiantes, UnitHabilidades;
 
 const
   RUTA_COMPETENCIAS = 'docs\competencias.dat';
@@ -12,10 +12,10 @@ procedure AbrirCompetencias(var archC: FileCompetencias);
 function BuscarCompetencia(var archC: FileCompetencias; legajo, codigo: string; var comp: TCompetencia): LongInt;
 function NombreNivel(nivel: Byte): string;
 procedure MostrarCompetencia(comp: TCompetencia);
-procedure AltaCompetencia(var archC: FileCompetencias; var archE: FileEstudiantes; var archH: FileHabilidades);
 procedure CargarCompetencias(var archC: FileCompetencias; var archE: FileEstudiantes; var archH: FileHabilidades);
 procedure BajaCompetencia(var archC: FileCompetencias);
-procedure ModificarCompetencia(var archC: FileCompetencias);
+procedure LeerCampoCompetencia(campo: Integer; var comp: TCompetencia);
+procedure GuardarCompetencia(var archC: FileCompetencias; posicion: LongInt; comp: TCompetencia);
 procedure ListarCompetencias(var archC: FileCompetencias);
 procedure ConsultarPorLegajo(var archC: FileCompetencias; var archE: FileEstudiantes; var archH: FileHabilidades);
 procedure ConsultarPorHabilidad(var archC: FileCompetencias; var archE: FileEstudiantes; var archH: FileHabilidades);
@@ -24,6 +24,12 @@ implementation
 
 const
   MAX_RESULTADOS = 1000;
+  TITULOS_COMPETENCIAS: array[1..4] of string = ('Legajo', 'Habilidad', 'Nivel', 'Dominio');
+  ANCHOS_COMPETENCIAS: array[1..4] of Integer = (10, 10, 5, 10);
+  TITULOS_HABILIDADES_ESTUDIANTE: array[1..5] of string = ('Codigo', 'Habilidad', 'Categoria', 'Nivel', 'Dominio');
+  ANCHOS_HABILIDADES_ESTUDIANTE: array[1..5] of Integer = (10, 30, 20, 5, 10);
+  TITULOS_CANDIDATOS: array[1..6] of string = ('Legajo', 'Nombre y apellido', 'Carrera', 'Prom.', 'Nivel', 'Dominio');
+  ANCHOS_CANDIDATOS: array[1..6] of Integer = (10, 25, 16, 5, 5, 10);
 
 type
   THabilidadEstudiante = record
@@ -105,10 +111,9 @@ end;
 
 procedure MostrarCompetencia(comp: TCompetencia);
 begin
-  writeln('Legajo: ', comp.legajoEstudiante);
-  writeln('Codigo de habilidad: ', comp.codigoHabilidad);
-  writeln('Nivel de dominio: ', comp.nivelDominio, ' - ', NombreNivel(comp.nivelDominio));
-  writeln('----------------------------------------');
+  MostrarDato('Legajo', comp.legajoEstudiante);
+  MostrarDato('Codigo de habilidad', comp.codigoHabilidad);
+  MostrarDato('Nivel de dominio', IntToStr(comp.nivelDominio) + ' - ' + NombreNivel(comp.nivelDominio));
 end;
 
 procedure AltaCompetencia(var archC: FileCompetencias; var archE: FileEstudiantes; var archH: FileHabilidades);
@@ -141,14 +146,11 @@ begin
 end;
 
 procedure CargarCompetencias(var archC: FileCompetencias; var archE: FileEstudiantes; var archH: FileHabilidades);
-var
-  respuesta: Char;
 begin
   repeat
     AltaCompetencia(archC, archE, archH);
-    write('Desea cargar otra competencia? (S/N): ');
-    readln(respuesta);
-  until UpCase(respuesta) <> 'S';
+    writeln;
+  until not Confirmar('Desea cargar otra competencia?');
 end;
 
 procedure BajaCompetencia(var archC: FileCompetencias);
@@ -166,34 +168,31 @@ begin
     writeln('No existe esa competencia.')
   else
   begin
-    comp.activa := False;
-    Seek(archC, posicion);
-    Write(archC, comp);
-    writeln('Competencia dada de baja.');
+    writeln;
+    MostrarCompetencia(comp);
+    writeln;
+    if Confirmar('Confirma la baja de la competencia?') then
+    begin
+      comp.activa := False;
+      GuardarCompetencia(archC, posicion, comp);
+      writeln('Competencia dada de baja.');
+    end
+    else
+      writeln('Baja cancelada.');
   end;
 end;
 
-procedure ModificarCompetencia(var archC: FileCompetencias);
-var
-  comp: TCompetencia;
-  legajo, codigo: string[10];
-  posicion: LongInt;
+procedure LeerCampoCompetencia(campo: Integer; var comp: TCompetencia);
 begin
-  write('Legajo del estudiante: ');
-  readln(legajo);
-  write('Codigo de habilidad: ');
-  readln(codigo);
-  posicion := BuscarCompetencia(archC, legajo, codigo, comp);
-  if posicion = -1 then
-    writeln('No existe esa competencia.')
-  else
-  begin
-    MostrarCompetencia(comp);
-    comp.nivelDominio := LeerNivel('Nuevo nivel de dominio');
-    Seek(archC, posicion);
-    Write(archC, comp);
-    writeln('Competencia modificada.');
+  case campo of
+    1: comp.nivelDominio := LeerNivel('Nuevo nivel de dominio');
   end;
+end;
+
+procedure GuardarCompetencia(var archC: FileCompetencias; posicion: LongInt; comp: TCompetencia);
+begin
+  Seek(archC, posicion);
+  Write(archC, comp);
 end;
 
 procedure ListarCompetencias(var archC: FileCompetencias);
@@ -207,13 +206,13 @@ begin
   begin
     Read(archC, comp);
     if comp.activa then
-    begin
-      MostrarCompetencia(comp);
-      cantidad := cantidad + 1;
-    end;
+      AgregarFila([comp.legajoEstudiante, comp.codigoHabilidad, IntToStr(comp.nivelDominio), NombreNivel(comp.nivelDominio)],
+                  TITULOS_COMPETENCIAS, ANCHOS_COMPETENCIAS, cantidad);
   end;
   if cantidad = 0 then
-    writeln('No hay competencias registradas.');
+    writeln('No hay competencias registradas.')
+  else
+    CerrarTabla(ANCHOS_COMPETENCIAS, cantidad);
 end;
 
 procedure OrdenarPorHabilidadYNivel(var v: TVectorHabilidades; n: Integer);
@@ -238,7 +237,7 @@ var
   comp: TCompetencia;
   hab: THabilidad;
   legajo: string[10];
-  cantidad, i: Integer;
+  cantidad, filas, i: Integer;
 begin
   write('Legajo del estudiante: ');
   readln(legajo);
@@ -246,7 +245,9 @@ begin
     writeln('No existe un estudiante con ese legajo.')
   else
   begin
+    writeln;
     MostrarEstudiante(est);
+    writeln;
     cantidad := 0;
     Seek(archC, 0);
     while (not Eof(archC)) and (cantidad < MAX_RESULTADOS) do
@@ -267,11 +268,14 @@ begin
     else
     begin
       OrdenarPorHabilidadYNivel(habilidadesEstudiante, cantidad);
-      writeln('Habilidades del estudiante:');
+      writeln('': MARGEN, 'Habilidades del estudiante:');
+      filas := 0;
       for i := 1 to cantidad do
-        writeln(habilidadesEstudiante[i].nombre, ' (', habilidadesEstudiante[i].codigoHabilidad, ', ',
-                habilidadesEstudiante[i].categoria, ') - Nivel: ', habilidadesEstudiante[i].nivelDominio,
-                ' - ', NombreNivel(habilidadesEstudiante[i].nivelDominio));
+        AgregarFila([habilidadesEstudiante[i].codigoHabilidad, habilidadesEstudiante[i].nombre,
+                     habilidadesEstudiante[i].categoria, IntToStr(habilidadesEstudiante[i].nivelDominio),
+                     NombreNivel(habilidadesEstudiante[i].nivelDominio)],
+                    TITULOS_HABILIDADES_ESTUDIANTE, ANCHOS_HABILIDADES_ESTUDIANTE, filas);
+      CerrarTabla(ANCHOS_HABILIDADES_ESTUDIANTE, filas);
     end;
   end;
 end;
@@ -299,7 +303,7 @@ var
   hab: THabilidad;
   codigo: string[10];
   nivelMinimo: Byte;
-  cantidad, i: Integer;
+  cantidad, filas, i: Integer;
 begin
   write('Codigo de habilidad: ');
   readln(codigo);
@@ -326,14 +330,16 @@ begin
     else
     begin
       OrdenarPorPromedioYNombre(candidatos, cantidad);
-      writeln('Estudiantes con ', hab.nombre, ' y nivel minimo ', nivelMinimo, ':');
-      writeln('----------------------------------------');
+      writeln;
+      writeln('': MARGEN, 'Estudiantes con ', hab.nombre, ' y nivel minimo ', nivelMinimo, ' (',
+              NombreNivel(nivelMinimo), '):');
+      filas := 0;
       for i := 1 to cantidad do
-      begin
-        writeln('Nivel de dominio en ', hab.nombre, ': ', candidatos[i].nivelDominio, ' - ',
-                NombreNivel(candidatos[i].nivelDominio));
-        MostrarEstudiante(candidatos[i].est);
-      end;
+        AgregarFila([candidatos[i].est.legajo, candidatos[i].est.nombreApellido, candidatos[i].est.carrera,
+                     RealATexto(candidatos[i].est.promedio), IntToStr(candidatos[i].nivelDominio),
+                     NombreNivel(candidatos[i].nivelDominio)],
+                    TITULOS_CANDIDATOS, ANCHOS_CANDIDATOS, filas);
+      CerrarTabla(ANCHOS_CANDIDATOS, filas);
     end;
   end;
 end;

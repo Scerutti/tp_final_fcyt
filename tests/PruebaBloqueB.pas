@@ -53,17 +53,19 @@ begin
   accion := ParamStr(1);
   if accion = 'alta-rechazada' then
   begin
-    AltaCompetencia(c, e, h); Comprobar(FileSize(c) = 10);
+    CargarCompetencias(c, e, h); Comprobar(FileSize(c) = 10);
   end
   else if accion = 'alta' then
   begin
-    AltaCompetencia(c, e, h);
+    CargarCompetencias(c, e, h);
     pos := BuscarCompetencia(c, 'E5', 'H1', comp);
     Comprobar((FileSize(c) = 11) and (pos = 10) and (comp.nivelDominio = 3));
   end
   else if accion = 'modificar' then
   begin
-    ModificarCompetencia(c);
+    pos := BuscarCompetencia(c, 'E1', 'H1', comp);
+    LeerCampoCompetencia(1, comp);
+    GuardarCompetencia(c, pos, comp);
     pos := BuscarCompetencia(c, 'E1', 'H1', comp);
     Comprobar((FileSize(c) = 10) and (pos = 0) and (comp.nivelDominio = 1));
   end
@@ -74,7 +76,11 @@ begin
     Seek(c, 0); Read(c, comp); Comprobar(not comp.activa);
     ConsultarPorLegajo(c, e, h);
   end
-  else if accion = 'modificar-inexistente' then ModificarCompetencia(c)
+  else if accion = 'baja-cancelada' then
+  begin
+    BajaCompetencia(c);
+    Comprobar(BuscarCompetencia(c, 'E1', 'H1', comp) = 0);
+  end
   else if accion = 'baja-inexistente' then BajaCompetencia(c)
   else if accion = 'legajo' then ConsultarPorLegajo(c, e, h)
   else if accion = 'habilidad' then ConsultarPorHabilidad(c, e, h)

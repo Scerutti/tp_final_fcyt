@@ -3,7 +3,7 @@ unit UnitHabilidades;
 interface
 
 uses
-  SysUtils, TiposGlobales;
+  SysUtils, TiposGlobales, UnitUtilidades;
 
 const
   RUTA_HABILIDADES = 'docs\habilidades.dat';
@@ -11,13 +11,17 @@ const
 procedure AbrirHabilidades(var archH: FileHabilidades);
 function BuscarHabilidad(var archH: FileHabilidades; codigo: string; var hab: THabilidad): LongInt;
 procedure MostrarHabilidad(hab: THabilidad);
-procedure AltaHabilidad(var archH: FileHabilidades);
 procedure CargarHabilidades(var archH: FileHabilidades);
 procedure BajaHabilidad(var archH: FileHabilidades);
-procedure ModificarHabilidad(var archH: FileHabilidades);
+procedure LeerCampoHabilidad(campo: Integer; var hab: THabilidad);
+procedure GuardarHabilidad(var archH: FileHabilidades; posicion: LongInt; hab: THabilidad);
 procedure ListarHabilidades(var archH: FileHabilidades);
 
 implementation
+
+const
+  TITULOS_HABILIDADES: array[1..3] of string = ('Codigo', 'Nombre', 'Categoria');
+  ANCHOS_HABILIDADES: array[1..3] of Integer = (10, 40, 30);
 
 procedure AbrirHabilidades(var archH: FileHabilidades);
 var
@@ -50,10 +54,9 @@ end;
 
 procedure MostrarHabilidad(hab: THabilidad);
 begin
-  writeln('Codigo: ', hab.codigoHabilidad);
-  writeln('Nombre: ', hab.nombre);
-  writeln('Categoria: ', hab.categoria);
-  writeln('----------------------------------------');
+  MostrarDato('Codigo', hab.codigoHabilidad);
+  MostrarDato('Nombre', hab.nombre);
+  MostrarDato('Categoria', hab.categoria);
 end;
 
 procedure LeerDatosHabilidad(var hab: THabilidad);
@@ -83,14 +86,11 @@ begin
 end;
 
 procedure CargarHabilidades(var archH: FileHabilidades);
-var
-  respuesta: Char;
 begin
   repeat
     AltaHabilidad(archH);
-    write('Desea cargar otra habilidad? (S/N): ');
-    readln(respuesta);
-  until UpCase(respuesta) <> 'S';
+    writeln;
+  until not Confirmar('Desea cargar otra habilidad?');
 end;
 
 procedure BajaHabilidad(var archH: FileHabilidades);
@@ -106,32 +106,40 @@ begin
     writeln('No existe una habilidad con ese codigo.')
   else
   begin
-    hab.activa := False;
-    Seek(archH, posicion);
-    Write(archH, hab);
-    writeln('Habilidad dada de baja.');
+    writeln;
+    MostrarHabilidad(hab);
+    writeln;
+    if Confirmar('Confirma la baja de la habilidad?') then
+    begin
+      hab.activa := False;
+      GuardarHabilidad(archH, posicion, hab);
+      writeln('Habilidad dada de baja.');
+    end
+    else
+      writeln('Baja cancelada.');
   end;
 end;
 
-procedure ModificarHabilidad(var archH: FileHabilidades);
-var
-  hab: THabilidad;
-  codigo: string[10];
-  posicion: LongInt;
+procedure LeerCampoHabilidad(campo: Integer; var hab: THabilidad);
 begin
-  write('Codigo de la habilidad a modificar: ');
-  readln(codigo);
-  posicion := BuscarHabilidad(archH, codigo, hab);
-  if posicion = -1 then
-    writeln('No existe una habilidad con ese codigo.')
-  else
-  begin
-    MostrarHabilidad(hab);
-    LeerDatosHabilidad(hab);
-    Seek(archH, posicion);
-    Write(archH, hab);
-    writeln('Habilidad modificada.');
+  case campo of
+    1:
+      begin
+        write('Nuevo nombre: ');
+        readln(hab.nombre);
+      end;
+    2:
+      begin
+        write('Nueva categoria: ');
+        readln(hab.categoria);
+      end;
   end;
+end;
+
+procedure GuardarHabilidad(var archH: FileHabilidades; posicion: LongInt; hab: THabilidad);
+begin
+  Seek(archH, posicion);
+  Write(archH, hab);
 end;
 
 procedure ListarHabilidades(var archH: FileHabilidades);
@@ -145,13 +153,13 @@ begin
   begin
     Read(archH, hab);
     if hab.activa then
-    begin
-      MostrarHabilidad(hab);
-      cantidad := cantidad + 1;
-    end;
+      AgregarFila([hab.codigoHabilidad, hab.nombre, hab.categoria],
+                  TITULOS_HABILIDADES, ANCHOS_HABILIDADES, cantidad);
   end;
   if cantidad = 0 then
-    writeln('No hay habilidades registradas.');
+    writeln('No hay habilidades registradas.')
+  else
+    CerrarTabla(ANCHOS_HABILIDADES, cantidad);
 end;
 
 end.

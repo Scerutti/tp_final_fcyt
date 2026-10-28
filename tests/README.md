@@ -19,17 +19,17 @@ Sale con código 0 si pasan todas, y 1 si alguna falla o si algún programa de p
 
 ## Estado actual
 
-47 pasan, 0 fallan.
+49 pasan, 0 fallan.
 
 ## Qué cubre
 
 | Suite | Casos |
 |---|---|
-| Estudiantes | Alta con legajo y DNI repetidos, modificación con el DNI de otro, baja lógica, listados, legajo de más de 10 caracteres, reusar el legajo de una baja, carga múltiple |
-| Habilidades | Alta con código repetido, modificación, baja lógica, listados, código de más de 10 caracteres |
+| Estudiantes | Alta con legajo y DNI repetidos, respuesta inválida a "cargar otro", modificación de un campo, modificación con el DNI de otro, baja confirmada y cancelada, listado en tabla, legajo de más de 10 caracteres, reusar el legajo de una baja, carga múltiple |
+| Habilidades | Alta con código repetido, modificación de un campo, baja confirmada y cancelada, listado en tabla, código de más de 10 caracteres |
 | Apertura de archivos | Crea el `.dat` si no existe, lo reabre sin perder datos, y crea la carpeta `docs` si falta |
 | Entradas inválidas | Año, promedio y porcentaje con letras, con coma, vacíos o fuera de rango: vuelve a pedir el dato en lugar de cortarse |
-| Competencias | Alta con legajo o código inexistente, par repetido, nivel fuera de rango o con texto, modificación y baja |
+| Competencias | Alta con legajo o código inexistente, par repetido, nivel fuera de rango o con texto, modificación del nivel, baja confirmada y cancelada |
 | Consulta por legajo | Orden por habilidad y nivel, legajo inexistente, estudiante sin habilidades |
 | Consulta por habilidad | Orden por promedio y nombre, filtro por nivel mínimo, sin resultados, ignora registros dados de baja |
 

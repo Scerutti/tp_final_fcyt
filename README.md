@@ -14,7 +14,8 @@ Ya están implementados todos los puntos del enunciado:
 | `UnitEstudiantes.pas` | Apertura, carga, ABM y listado de estudiantes |
 | `UnitHabilidades.pas` | Apertura, carga, ABM y listado de habilidades |
 | `UnitCompetencias.pas` | Apertura, carga, ABM y listado de competencias, Consulta 1 y Consulta 2 |
-| `UnitPresentacion.pas` | Logo, menús, encabezados y pie de pantalla |
+| `UnitPresentacion.pas` | Logo, menús, encabezados, pantalla de edición y pie de pantalla |
+| `UnitUtilidades.pas` | Tamaño de pantalla, tablas paginadas, confirmación S/N y lectura de números |
 | `main.pas` | Programa principal con los menús |
 
 Lo que falta es probar todo, cerrar algunas decisiones y preparar la defensa.

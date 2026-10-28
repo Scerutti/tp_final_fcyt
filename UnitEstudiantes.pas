@@ -3,7 +3,7 @@ unit UnitEstudiantes;
 interface
 
 uses
-  SysUtils, TiposGlobales;
+  SysUtils, TiposGlobales, UnitUtilidades;
 
 const
   RUTA_ESTUDIANTES = 'docs\estudiantes.dat';
@@ -12,13 +12,17 @@ procedure AbrirEstudiantes(var archE: FileEstudiantes);
 function BuscarEstudiante(var archE: FileEstudiantes; legajo: string; var est: TEstudiante): LongInt;
 function BuscarEstudiantePorDni(var archE: FileEstudiantes; dni: string): LongInt;
 procedure MostrarEstudiante(est: TEstudiante);
-procedure AltaEstudiante(var archE: FileEstudiantes);
 procedure CargarEstudiantes(var archE: FileEstudiantes);
 procedure BajaEstudiante(var archE: FileEstudiantes);
-procedure ModificarEstudiante(var archE: FileEstudiantes);
+function LeerCampoEstudiante(var archE: FileEstudiantes; posicion: LongInt; campo: Integer; var est: TEstudiante): Boolean;
+procedure GuardarEstudiante(var archE: FileEstudiantes; posicion: LongInt; est: TEstudiante);
 procedure ListarEstudiantes(var archE: FileEstudiantes);
 
 implementation
+
+const
+  TITULOS_ESTUDIANTES: array[1..7] of string = ('Legajo', 'DNI', 'Nombre y apellido', 'Carrera', 'Ingreso', 'Prom.', 'Avance');
+  ANCHOS_ESTUDIANTES: array[1..7] of Integer = (10, 10, 25, 16, 7, 5, 7);
 
 procedure AbrirEstudiantes(var archE: FileEstudiantes);
 var
@@ -67,49 +71,13 @@ end;
 
 procedure MostrarEstudiante(est: TEstudiante);
 begin
-  writeln('Legajo: ', est.legajo);
-  writeln('DNI: ', est.dni);
-  writeln('Nombre y apellido: ', est.nombreApellido);
-  writeln('Carrera: ', est.carrera);
-  writeln('Anio de ingreso: ', est.anioIngreso);
-  writeln('Promedio: ', est.promedio:0:2);
-  writeln('Porcentaje de avance: ', est.porcentajeAvance:0:2, '%');
-  writeln('----------------------------------------');
-end;
-
-function LeerEntero(mensaje: string; minimo, maximo: LongInt): LongInt;
-var
-  entrada: string;
-  valor, error: LongInt;
-  valido: Boolean;
-begin
-  repeat
-    write(mensaje);
-    readln(entrada);
-    Val(Trim(entrada), valor, error);
-    valido := (error = 0) and (valor >= minimo) and (valor <= maximo);
-    if not valido then
-      writeln('Ingrese un numero entero entre ', minimo, ' y ', maximo, '.');
-  until valido;
-  LeerEntero := valor;
-end;
-
-function LeerReal(mensaje: string; minimo, maximo: Real): Real;
-var
-  entrada: string;
-  valor: Real;
-  error: LongInt;
-  valido: Boolean;
-begin
-  repeat
-    write(mensaje);
-    readln(entrada);
-    Val(Trim(entrada), valor, error);
-    valido := (error = 0) and (valor >= minimo) and (valor <= maximo);
-    if not valido then
-      writeln('Ingrese un numero entre ', minimo:0:2, ' y ', maximo:0:2, ' usando punto decimal.');
-  until valido;
-  LeerReal := valor;
+  MostrarDato('Legajo', est.legajo);
+  MostrarDato('DNI', est.dni);
+  MostrarDato('Nombre y apellido', est.nombreApellido);
+  MostrarDato('Carrera', est.carrera);
+  MostrarDato('Anio de ingreso', IntToStr(est.anioIngreso));
+  MostrarDato('Promedio', RealATexto(est.promedio));
+  MostrarDato('Porcentaje de avance', RealATexto(est.porcentajeAvance) + '%');
 end;
 
 procedure LeerDatosEstudiante(var est: TEstudiante);
@@ -149,14 +117,11 @@ begin
 end;
 
 procedure CargarEstudiantes(var archE: FileEstudiantes);
-var
-  respuesta: Char;
 begin
   repeat
     AltaEstudiante(archE);
-    write('Desea cargar otro estudiante? (S/N): ');
-    readln(respuesta);
-  until UpCase(respuesta) <> 'S';
+    writeln;
+  until not Confirmar('Desea cargar otro estudiante?');
 end;
 
 procedure BajaEstudiante(var archE: FileEstudiantes);
@@ -172,41 +137,62 @@ begin
     writeln('No existe un estudiante con ese legajo.')
   else
   begin
-    est.activo := False;
-    Seek(archE, posicion);
-    Write(archE, est);
-    writeln('Estudiante dado de baja.');
+    writeln;
+    MostrarEstudiante(est);
+    writeln;
+    if Confirmar('Confirma la baja del estudiante?') then
+    begin
+      est.activo := False;
+      GuardarEstudiante(archE, posicion, est);
+      writeln('Estudiante dado de baja.');
+    end
+    else
+      writeln('Baja cancelada.');
   end;
 end;
 
-procedure ModificarEstudiante(var archE: FileEstudiantes);
+function LeerCampoEstudiante(var archE: FileEstudiantes; posicion: LongInt; campo: Integer; var est: TEstudiante): Boolean;
 var
-  est: TEstudiante;
-  legajo, dni: string[10];
-  posicion, posicionDni: LongInt;
+  dni: string[10];
+  posicionDni: LongInt;
+  valido: Boolean;
 begin
-  write('Legajo del estudiante a modificar: ');
-  readln(legajo);
-  posicion := BuscarEstudiante(archE, legajo, est);
-  if posicion = -1 then
-    writeln('No existe un estudiante con ese legajo.')
-  else
-  begin
-    MostrarEstudiante(est);
-    write('DNI: ');
-    readln(dni);
-    posicionDni := BuscarEstudiantePorDni(archE, dni);
-    if (posicionDni <> -1) and (posicionDni <> posicion) then
-      writeln('Ya existe otro estudiante con ese DNI.')
-    else
-    begin
-      est.dni := dni;
-      LeerDatosEstudiante(est);
-      Seek(archE, posicion);
-      Write(archE, est);
-      writeln('Estudiante modificado.');
-    end;
+  valido := True;
+  case campo of
+    1:
+      begin
+        write('Nuevo DNI: ');
+        readln(dni);
+        posicionDni := BuscarEstudiantePorDni(archE, dni);
+        if (posicionDni <> -1) and (posicionDni <> posicion) then
+        begin
+          writeln('Ya existe otro estudiante con ese DNI.');
+          valido := False;
+        end
+        else
+          est.dni := dni;
+      end;
+    2:
+      begin
+        write('Nuevo nombre y apellido: ');
+        readln(est.nombreApellido);
+      end;
+    3:
+      begin
+        write('Nueva carrera: ');
+        readln(est.carrera);
+      end;
+    4: est.anioIngreso := LeerEntero('Nuevo anio de ingreso: ', 1900, 2100);
+    5: est.promedio := LeerReal('Nuevo promedio: ', 0, 10);
+    6: est.porcentajeAvance := LeerReal('Nuevo porcentaje de avance: ', 0, 100);
   end;
+  LeerCampoEstudiante := valido;
+end;
+
+procedure GuardarEstudiante(var archE: FileEstudiantes; posicion: LongInt; est: TEstudiante);
+begin
+  Seek(archE, posicion);
+  Write(archE, est);
 end;
 
 procedure ListarEstudiantes(var archE: FileEstudiantes);
@@ -220,13 +206,14 @@ begin
   begin
     Read(archE, est);
     if est.activo then
-    begin
-      MostrarEstudiante(est);
-      cantidad := cantidad + 1;
-    end;
+      AgregarFila([est.legajo, est.dni, est.nombreApellido, est.carrera, IntToStr(est.anioIngreso),
+                   RealATexto(est.promedio), RealATexto(est.porcentajeAvance) + '%'],
+                  TITULOS_ESTUDIANTES, ANCHOS_ESTUDIANTES, cantidad);
   end;
   if cantidad = 0 then
-    writeln('No hay estudiantes registrados.');
+    writeln('No hay estudiantes registrados.')
+  else
+    CerrarTabla(ANCHOS_ESTUDIANTES, cantidad);
 end;
 
 end.
