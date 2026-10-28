@@ -268,7 +268,7 @@ begin
     else
     begin
       OrdenarPorHabilidadYNivel(habilidadesEstudiante, cantidad);
-      writeln('': MARGEN, 'Habilidades del estudiante:');
+      writeln('Habilidades del estudiante:');
       filas := 0;
       for i := 1 to cantidad do
         AgregarFila([habilidadesEstudiante[i].codigoHabilidad, habilidadesEstudiante[i].nombre,
@@ -331,7 +331,7 @@ begin
     begin
       OrdenarPorPromedioYNombre(candidatos, cantidad);
       writeln;
-      writeln('': MARGEN, 'Estudiantes con ', hab.nombre, ' y nivel minimo ', nivelMinimo, ' (',
+      writeln('Estudiantes con ', hab.nombre, ' y nivel minimo ', nivelMinimo, ' (',
               NombreNivel(nivelMinimo), '):');
       filas := 0;
       for i := 1 to cantidad do

@@ -3,7 +3,6 @@ unit UnitUtilidades;
 interface
 
 const
-  MARGEN = 3;
   ANCHO = 100;
 
 function Repetir(c: Char; n: Integer): string;
@@ -38,7 +37,7 @@ end;
 function Ajustar(texto: string; largo: Integer): string;
 begin
   if Length(texto) > largo then
-    Ajustar := Copy(texto, 1, largo)
+    Ajustar := Copy(texto, 1, largo - 3) + '...'
   else
     Ajustar := texto + Repetir(' ', largo - Length(texto));
 end;
@@ -102,10 +101,10 @@ end;
 
 procedure MostrarDato(etiqueta, valor: string);
 begin
-  writeln('': MARGEN, Ajustar(etiqueta, 22), ': ', valor);
+  writeln(Ajustar(etiqueta, 22), ': ', valor);
 end;
 
-procedure LineaTabla(anchos: array of Integer);
+function TextoLineaTabla(anchos: array of Integer): string;
 var
   linea: string;
   i: Integer;
@@ -113,7 +112,12 @@ begin
   linea := '+';
   for i := 0 to High(anchos) do
     linea := linea + Repetir('-', anchos[i] + 2) + '+';
-  writeln('': MARGEN, linea);
+  TextoLineaTabla := linea;
+end;
+
+procedure LineaTabla(anchos: array of Integer);
+begin
+  writeln(TextoLineaTabla(anchos));
 end;
 
 procedure FilaTabla(textos: array of string; anchos: array of Integer);
@@ -124,7 +128,7 @@ begin
   linea := '|';
   for i := 0 to High(anchos) do
     linea := linea + ' ' + Ajustar(textos[i], anchos[i]) + ' |';
-  writeln('': MARGEN, linea);
+  writeln(linea);
 end;
 
 procedure EncabezadoTabla(titulos: array of string; anchos: array of Integer);
@@ -139,7 +143,7 @@ begin
   if filas = 0 then
     EncabezadoTabla(titulos, anchos)
   else if Assigned(Paginador) then
-    if Paginador(3) then
+    if Paginador(3, TextoLineaTabla(anchos)) then
       EncabezadoTabla(titulos, anchos);
   FilaTabla(textos, anchos);
   filas := filas + 1;
@@ -148,7 +152,7 @@ end;
 procedure CerrarTabla(anchos: array of Integer; filas: Integer);
 begin
   LineaTabla(anchos);
-  writeln('': MARGEN, 'Total: ', filas);
+  writeln('Total: ', filas);
 end;
 
 end.
