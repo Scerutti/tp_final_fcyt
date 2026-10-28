@@ -239,6 +239,7 @@ begin
 end;
 
 begin
+  Paginador := @PaginarListado;
   AbrirEstudiantes(archE);
   AbrirHabilidades(archH);
   AbrirCompetencias(archC);

@@ -5,7 +5,6 @@ interface
 const
   MARGEN = 3;
   ANCHO = 100;
-  FILAS_POR_PAGINA = 10;
 
 function Repetir(c: Char; n: Integer): string;
 function Ajustar(texto: string; largo: Integer): string;
@@ -23,7 +22,7 @@ procedure CerrarTabla(anchos: array of Integer; filas: Integer);
 implementation
 
 uses
-  SysUtils;
+  SysUtils, TiposGlobales;
 
 function Repetir(c: Char; n: Integer): string;
 var
@@ -139,14 +138,9 @@ procedure AgregarFila(textos, titulos: array of string; anchos: array of Integer
 begin
   if filas = 0 then
     EncabezadoTabla(titulos, anchos)
-  else if filas mod FILAS_POR_PAGINA = 0 then
-  begin
-    LineaTabla(anchos);
-    write('': MARGEN, 'Presione ENTER para ver la pagina siguiente...');
-    readln;
-    writeln;
-    EncabezadoTabla(titulos, anchos);
-  end;
+  else if Assigned(Paginador) then
+    if Paginador(3) then
+      EncabezadoTabla(titulos, anchos);
   FilaTabla(textos, anchos);
   filas := filas + 1;
 end;

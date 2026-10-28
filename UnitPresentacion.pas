@@ -10,6 +10,7 @@ procedure MostrarEstadoActual(seccion, titulo: string);
 procedure MostrarOpcionesEdicion(campos: array of string; aviso: string);
 procedure MostrarCampoElegido(campo: string);
 procedure Pausa;
+function PaginarListado(lineasSiguientes: Integer): Boolean;
 procedure MostrarDespedida;
 
 implementation
@@ -33,6 +34,31 @@ const
   );
 
   COLORES_LOGO: array[1..5] of Byte = (LightGray, Cyan, Cyan, Blue, Blue);
+
+  ANCHO_VENTANA = ANCHO + 2 + 2 * MARGEN;
+
+var
+  anchoPantalla, altoPantalla, filaInicio: Integer;
+
+procedure PrepararPantalla(alto: Integer);
+var
+  izquierda, derecha: Integer;
+begin
+  Window(1, 1, anchoPantalla, altoPantalla);
+  TextBackground(Black);
+  ClrScr;
+  izquierda := (anchoPantalla - ANCHO_VENTANA) div 2 + 1;
+  if izquierda < 1 then
+    izquierda := 1;
+  derecha := izquierda + ANCHO_VENTANA - 1;
+  if derecha > anchoPantalla then
+    derecha := anchoPantalla;
+  if (alto > 0) and (alto < altoPantalla) then
+    filaInicio := (altoPantalla - alto) div 2 + 1
+  else
+    filaInicio := 1;
+  Window(izquierda, filaInicio, derecha, altoPantalla);
+end;
 
 procedure IrMargen;
 begin
@@ -189,8 +215,7 @@ var
   i, izquierda, columna, fila, filaFinal: Integer;
 begin
   CursorOff;
-  TextBackground(Black);
-  ClrScr;
+  PrepararPantalla(19);
   Borde('=', TEXTO_SUPERIOR);
   writeln;
   LineaVacia;
@@ -237,8 +262,7 @@ procedure MostrarMenu(titulo: string; opciones: array of string; opcionSalida: s
 var
   i, columna, fila: Integer;
 begin
-  TextBackground(Black);
-  ClrScr;
+  PrepararPantalla(20 + Length(opciones));
   Borde('=', TEXTO_SUPERIOR);
   writeln;
   LineaVacia;
@@ -274,8 +298,7 @@ end;
 
 procedure MostrarTituloSeccion(seccion, titulo: string);
 begin
-  TextBackground(Black);
-  ClrScr;
+  PrepararPantalla(0);
   Borde('=', 'UADERTalents');
   writeln;
   AbrirLinea;
@@ -377,10 +400,30 @@ begin
   TextColor(LightGray);
 end;
 
-procedure MostrarDespedida;
+function PaginarListado(lineasSiguientes: Integer): Boolean;
+var
+  cortar: Boolean;
 begin
-  TextBackground(Black);
-  ClrScr;
+  cortar := WhereY + lineasSiguientes + 3 > WindMaxY - WindMinY + 1;
+  if cortar then
+  begin
+    IrMargen;
+    TextColor(LightGreen);
+    write('>> ');
+    TextColor(White);
+    write('Presione ENTER para ver mas...');
+    readln;
+    TextColor(LightGray);
+    ClrScr;
+  end;
+  PaginarListado := cortar;
+end;
+
+procedure MostrarDespedida;
+var
+  filaFinal: Integer;
+begin
+  PrepararPantalla(14);
   Borde('=', TEXTO_SUPERIOR);
   writeln;
   LineaVacia;
@@ -394,8 +437,15 @@ begin
   DibujarPie;
   Borde('=', TEXTO_INFERIOR);
   writeln;
+  filaFinal := filaInicio + WhereY - 1;
+  Window(1, 1, anchoPantalla, altoPantalla);
+  GotoXY(1, filaFinal);
   writeln;
   NormVideo;
 end;
 
+initialization
+  anchoPantalla := WindMaxX - WindMinX + 1;
+  altoPantalla := WindMaxY - WindMinY + 1;
+  filaInicio := 1;
 end.

@@ -31,6 +31,11 @@ type
   end;
   FileCompetencias = file of TCompetencia;
 
+  TPaginador = function(lineasSiguientes: Integer): Boolean;
+
+var
+  Paginador: TPaginador = nil;
+
 implementation
 
 end.
